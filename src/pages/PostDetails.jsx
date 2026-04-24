@@ -22,6 +22,7 @@ const PostDetails = () => {
                 setPost(postRes.data);
                 if (postRes.data.likedByCurrentUser) setLiked(true);
 
+                // Fetch existing approved comments
                 const commentRes = await api.get(`/comments/post/${postRes.data.postId}`);
                 setComments(commentRes.data);
             } catch (err) {
@@ -43,15 +44,23 @@ const PostDetails = () => {
         if (!newComment.trim()) return;
 
         try {
+            // ✅ FIXED: Using /add to match the updated Backend mapping
             await api.post('/comments/add', {
                 postId: post.postId,
                 userId: currentUserId,
                 content: newComment,
                 parentId: 0 
             });
-            toast.success("Comment submitted! It will appear after moderation. 🛡️");
+            
+            // ✅ UX: Since status is PENDING, we don't add it to the local list yet
+            toast.info("Narrative submitted for moderation. 🛡️", {
+                position: "bottom-center",
+                autoClose: 5000
+            });
+            
             setNewComment("");
         } catch (err) {
+            console.error("Comment Error:", err);
             toast.error("Failed to post comment.");
         }
     };
@@ -101,13 +110,14 @@ const PostDetails = () => {
                 </div>
             </header>
 
-            {/* ✅ ADDED: Featured Image Section */}
+            {/* Featured Image Section */}
             <div className="w-full aspect-video rounded-[50px] overflow-hidden border border-gray-800 bg-gray-900 mb-16 shadow-2xl relative">
                 {post.featuredImageUrl ? (
                     <img 
                         src={post.featuredImageUrl} 
                         alt={post.title} 
                         className="w-full h-full object-cover"
+                        onError={(e) => e.target.src = 'https://via.placeholder.com/1200x675?text=Image+Unavailable'}
                     />
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-gray-800">
