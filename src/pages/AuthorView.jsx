@@ -115,127 +115,140 @@ const AuthorView = () => {
             }
         }
     };
+// ✅ Consolidated Submit Handler using FormData
+const handleSubmit = async (e, status) => {
+    e.preventDefault();
+    
+    if (!postData.title || !postData.content) {
+        toast.error("Headline and Journey content are required.");
+        return;
+    }
 
-    const handleSubmit = async (e, statusType) => {
-        e.preventDefault();
-        let finalImageUrl = previewUrl; 
+    // 1. Initialize FormData (Required for @RequestParam and MultipartFile in Backend)
+    const formData = new FormData();
+    formData.append('title', postData.title);
+    formData.append('content', postData.content);
+    formData.append('excerpt', postData.excerpt || "");
+    formData.append('authorId', loggedInUserId);
+    formData.append('status', status);
+    
+    if (postData.categoryId) {
+        formData.append('categoryId', postData.categoryId);
+    }
+    
+    if (postData.tagIds && postData.tagIds.length > 0) {
+        postData.tagIds.forEach(id => formData.append('tagIds', id));
+    }
 
-        try {
-            // 1️⃣ Handle Media Upload first if a NEW file was picked
-            if (selectedFile) {
-                const mediaFormData = new FormData();
-                mediaFormData.append('file', selectedFile);
-                mediaFormData.append('uploaderId', loggedInUserId);
-                mediaFormData.append('altText', postData.title);
+    // 2. Append the physical file if selected
+    if (selectedFile) {
+        formData.append('image', selectedFile);
+    }
 
-                const mediaRes = await api.post('/media/upload', mediaFormData);
-                finalImageUrl = mediaRes.data.url; 
-            }
-
-            // 2️⃣ Prepare Data
-            const postPayload = {
-                ...postData,
-                status: statusType,
-                featuredImageUrl: finalImageUrl,
-                excerpt: postData.excerpt || postData.content.substring(0, 150) + "..."
-            };
-
-            // 3️⃣ ROUTE TO CORRECT API: Choose PUT (Update) or POST (Create)
-            if (isEditing && currentPostId) {
-                // ✅ Update flow
-                await api.put(`/posts/${currentPostId}`, postPayload);
-                toast.success("Manuscript Refined! ✨");
-            } else {
-                // ✅ Create flow
-                await api.post('/posts/create', postPayload);
-                toast.success("New Story Released! 📝");
-            }
-
-            setShowModal(false);
-            fetchPosts(); 
-        } catch (err) {
-            console.error("Submission error:", err);
-            toast.error("Operation failed. check console.");
+    try {
+        if (isEditing) {
+            await api.put(`/posts/update/${currentPostId}`, formData);
+            toast.success("Manuscript refined successfully! ✨");
+        } else {
+            // ✅ This fix resolves the 415 error from your log
+            await api.post('/posts/create', formData);
+            toast.success(status === 'PUBLISHED' ? "Manuscript published! 📜" : "Draft saved.");
         }
-    };
-
-    if (loading) return <div className="p-10 text-center text-blue-500 animate-pulse font-mono h-screen flex items-center justify-center bg-black text-xs uppercase tracking-widest tracking-tighter">Syncing Studio...</div>;
+        
+        setShowModal(false);
+        fetchPosts(); // Refresh the table
+    } catch (err) {
+        console.error("Submission error:", err);
+        const errorMsg = err.response?.status === 415 
+            ? "Protocol Error: Backend expects multipart data." 
+            : "Protocol failed: Check system connectivity.";
+        toast.error(errorMsg);
+    }
+};
+    if (loading) return <div className="p-10 text-center text-slate-500 animate-pulse font-medium h-full flex flex-col items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-stone-200 border-t-amber-600 rounded-full animate-spin mb-4"></div>Fetching Studio...</div>;
 
     return (
         <div className="space-y-8 animate-in fade-in duration-700">
-            <div className="flex justify-between items-center border-b border-gray-800 pb-6">
-                <h1 className="text-3xl font-black italic flex items-center gap-3 tracking-tighter uppercase text-white">
-                    <LayoutDashboard className="text-blue-500" /> Author Studio
+            <div className="flex justify-between items-center border-b border-stone-200 pb-6">
+                <h1 className="text-3xl font-bold flex items-center gap-3 tracking-tight text-slate-900">
+                    <div className="p-2 bg-amber-50 rounded-xl text-amber-600"><LayoutDashboard size={24} /></div> Author Studio
                 </h1>
-                <button onClick={() => handleOpenModal()} className="bg-blue-600 px-8 py-3 rounded-2xl font-black uppercase italic tracking-tighter text-xs hover:bg-blue-700 transition shadow-xl shadow-blue-600/20">
-                    + New Narrative
+                <button onClick={() => handleOpenModal()} className="bg-amber-600 px-6 py-3 rounded-xl font-bold text-white hover:bg-amber-700 transition-all shadow-md shadow-amber-600/20 hover:-translate-y-0.5 active:scale-95 flex items-center gap-2">
+                    <FileEdit size={18} /> New Narrative
                 </button>
             </div>
 
-            <div className="bg-gray-900/30 rounded-[32px] border border-gray-800 overflow-hidden shadow-2xl">
+            <div className="bg-white rounded-3xl border border-stone-100 overflow-hidden shadow-sm">
                 <table className="w-full text-left text-sm">
-                    <thead className="bg-black/50 text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                    <thead className="bg-stone-50 border-b border-stone-100 text-slate-500 text-xs font-semibold uppercase tracking-wider">
                         <tr>
                             <th className="px-6 py-5">Manuscript</th>
                             <th className="px-6 py-5 text-center">Status</th>
-                            <th className="px-6 py-5 text-right pr-12">Actions</th>
+                            <th className="px-6 py-5 text-right pr-8">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-800">
+                    <tbody className="divide-y divide-stone-100">
                         {posts.map((post) => (
-                            <tr key={post.postId} className="hover:bg-gray-800/40 transition group">
-                                <td className="px-6 py-6 flex items-center gap-4">
-                                    <div className="h-12 w-16 rounded-xl bg-gray-800 overflow-hidden border border-gray-700 flex-shrink-0">
-                                        {post.featuredImageUrl ? <img src={post.featuredImageUrl} className="w-full h-full object-cover" alt=""/> : <ImageIcon size={14} className="m-auto mt-4 text-gray-700"/>}
+                            <tr key={post.postId} className="hover:bg-stone-50/50 transition-colors group">
+                                <td className="px-6 py-4 flex items-center gap-4">
+                                    <div className="h-14 w-20 rounded-xl bg-stone-100 overflow-hidden border border-stone-200 flex-shrink-0 flex items-center justify-center">
+                                        {post.featuredImageUrl ? <img src={post.featuredImageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt=""/> : <ImageIcon size={20} className="text-stone-300"/>}
                                     </div>
-                                    <span className="font-bold text-white text-lg tracking-tight truncate max-w-xs">{post.title}</span>
+                                    <span className="font-bold text-slate-900 text-base tracking-tight truncate max-w-xs">{post.title}</span>
                                 </td>
                                 <td className="px-6 py-4 text-center">
-                                    <span className={`text-[9px] px-3 py-1 rounded-full font-black tracking-widest border ${post.status === 'PUBLISHED' ? 'text-green-500 border-green-500/20 bg-green-500/5' : 'text-yellow-500 border-yellow-500/20 bg-yellow-500/5'}`}>
+                                    <span className={`text-xs px-3 py-1.5 rounded-full font-bold tracking-wide border ${post.status === 'PUBLISHED' ? 'text-green-700 border-green-200 bg-green-50' : 'text-amber-700 border-amber-200 bg-amber-50'}`}>
                                         {post.status}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 text-right pr-12">
-                                    <div className="flex justify-end gap-6">
-                                        <button onClick={() => handleOpenModal(post)} className="text-gray-500 hover:text-blue-500 transition"><FileEdit size={18} /></button>
-                                        <button onClick={() => handleDelete(post.postId)} className="text-gray-500 hover:text-red-500 transition"><Trash2 size={18} /></button>
+                                <td className="px-6 py-4 text-right pr-8">
+                                    <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button onClick={() => handleOpenModal(post)} className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"><FileEdit size={18} /></button>
+                                        <button onClick={() => handleDelete(post.postId)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={18} /></button>
                                     </div>
                                 </td>
                             </tr>
                         ))}
+                        {posts.length === 0 && (
+                            <tr>
+                                <td colSpan="3" className="px-6 py-12 text-center text-slate-500 font-medium">
+                                    No manuscripts found. Click "New Narrative" to get started.
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
 
             {showModal && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
-                    <div className="bg-gray-950 border border-gray-800 w-full max-w-4xl rounded-[40px] p-10 shadow-2xl overflow-y-auto max-h-[92vh] space-y-8 custom-scrollbar">
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+                    <div className="bg-white border border-stone-200 w-full max-w-4xl rounded-3xl p-8 md:p-10 shadow-2xl overflow-y-auto max-h-[92vh] space-y-8 custom-scrollbar">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">{isEditing ? 'Refine Manuscript' : 'New Narrative'}</h2>
-                            <button onClick={() => setShowModal(false)} className="bg-gray-900 p-2 rounded-full hover:text-red-500 transition border border-gray-800"><X size={20} /></button>
+                            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">{isEditing ? 'Refine Manuscript' : 'New Narrative'}</h2>
+                            <button onClick={() => setShowModal(false)} className="bg-stone-50 p-2 rounded-full hover:text-red-500 hover:bg-red-50 transition border border-stone-200"><X size={20} /></button>
                         </div>
 
                         <form className="space-y-6">
-                            <div onClick={() => fileInputRef.current.click()} className="w-full h-56 bg-black border-2 border-dashed border-gray-800 rounded-[30px] flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition group overflow-hidden">
-                                {previewUrl ? <img src={previewUrl} className="w-full h-full object-cover" alt="Preview" /> : <><UploadCloud size={30} className="text-gray-700 group-hover:text-blue-500 mb-2" /><p className="text-gray-600 font-black text-[10px] uppercase tracking-widest">Set Featured Image</p></>}
+                            <div onClick={() => fileInputRef.current.click()} className="w-full h-56 bg-stone-50 border-2 border-dashed border-stone-300 rounded-3xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-500 hover:bg-amber-50/30 transition-all group overflow-hidden relative">
+                                {previewUrl ? <img src={previewUrl} className="w-full h-full object-cover" alt="Preview" /> : <><UploadCloud size={32} className="text-stone-400 group-hover:text-amber-500 mb-3 transition-colors" /><p className="text-slate-500 font-semibold text-sm">Upload Featured Image</p></>}
                                 <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
                             </div>
 
-                            <input type="text" value={postData.title} placeholder="Headline..." className="w-full bg-black border border-gray-800 rounded-2xl p-5 text-white outline-none focus:border-blue-600 font-bold text-xl" onChange={(e) => setPostData({...postData, title: e.target.value})} />
+                            <input type="text" value={postData.title} placeholder="Headline..." className="w-full bg-white border border-stone-200 rounded-2xl p-5 text-slate-900 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-bold text-2xl transition-all placeholder:text-stone-300" onChange={(e) => setPostData({...postData, title: e.target.value})} />
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-3">
-                                    <label className="text-[10px] uppercase font-black tracking-widest text-gray-600 flex items-center gap-2"><Layers size={14}/> Classification</label>
-                                    <select value={postData.categoryId} onChange={(e) => setPostData({...postData, categoryId: e.target.value})} className="w-full bg-black border border-gray-800 rounded-xl p-4 text-sm text-gray-300 outline-none focus:border-blue-500 appearance-none">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><Layers size={16} className="text-amber-500"/> Classification</label>
+                                    <select value={postData.categoryId} onChange={(e) => setPostData({...postData, categoryId: e.target.value})} className="w-full bg-white border border-stone-200 rounded-xl p-4 text-slate-700 font-medium outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all appearance-none cursor-pointer">
                                         <option value="">Uncategorized</option>
                                         {categories.map(cat => <option key={cat.categoryId} value={cat.categoryId}>{cat.name}</option>)}
                                     </select>
                                 </div>
-                                <div className="space-y-3">
-                                    <label className="text-[10px] uppercase font-black tracking-widest text-gray-600 flex items-center gap-2"><TagIcon size={14}/> Narrative Tags</label>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 flex items-center gap-2"><TagIcon size={16} className="text-amber-500"/> Narrative Tags</label>
                                     <div className="flex flex-wrap gap-2">
                                         {tags.map(tag => (
-                                            <button key={tag.tagId} type="button" onClick={() => toggleTag(tag.tagId)} className={`px-4 py-2 rounded-full text-[10px] font-bold border transition-all ${postData.tagIds.includes(tag.tagId) ? 'bg-blue-600 border-blue-500 text-white' : 'bg-gray-900 border-gray-800 text-gray-500 hover:border-blue-500/50'}`}>
+                                            <button key={tag.tagId} type="button" onClick={() => toggleTag(tag.tagId)} className={`px-4 py-2 rounded-full text-xs font-bold border transition-all ${postData.tagIds.includes(tag.tagId) ? 'bg-amber-100 border-amber-200 text-amber-700 shadow-sm' : 'bg-white border-stone-200 text-slate-600 hover:border-amber-300 hover:bg-stone-50'}`}>
                                                 #{tag.name}
                                             </button>
                                         ))}
@@ -243,11 +256,11 @@ const AuthorView = () => {
                                 </div>
                             </div>
 
-                            <textarea value={postData.content} placeholder="Begin your journey..." rows="8" className="w-full bg-black border border-gray-800 rounded-2xl p-6 text-gray-300 outline-none focus:border-blue-600 font-serif text-lg leading-relaxed" onChange={(e) => setPostData({...postData, content: e.target.value})} />
+                            <textarea value={postData.content} placeholder="Begin your journey..." rows="8" className="w-full bg-white border border-stone-200 rounded-2xl p-6 text-slate-700 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-serif text-lg leading-relaxed transition-all placeholder:text-stone-300" onChange={(e) => setPostData({...postData, content: e.target.value})} />
 
-                            <div className="flex gap-4 pt-4">
-                                <button type="button" onClick={(e) => handleSubmit(e, "DRAFT")} className="flex-1 bg-gray-900 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400 hover:text-white transition flex justify-center items-center gap-2 border border-gray-800 hover:border-gray-600"><Save size={16}/> Archive as Draft</button>
-                                <button type="button" onClick={(e) => handleSubmit(e, "PUBLISHED")} className="flex-1 bg-blue-600 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-blue-700 transition flex justify-center items-center gap-2 shadow-2xl shadow-blue-600/20"><Send size={16}/> Release Manuscript</button>
+                            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                                <button type="button" onClick={(e) => handleSubmit(e, "DRAFT")} className="flex-1 bg-white py-4 rounded-xl font-bold text-slate-600 hover:text-slate-900 transition flex justify-center items-center gap-2 border border-stone-200 hover:bg-stone-50 hover:border-stone-300"><Save size={18}/> Save Draft</button>
+                                <button type="button" onClick={(e) => handleSubmit(e, "PUBLISHED")} className="flex-1 bg-amber-600 py-4 rounded-xl font-bold text-white hover:bg-amber-700 transition-all flex justify-center items-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95"><Send size={18}/> Publish Manuscript</button>
                             </div>
                         </form>
                     </div>

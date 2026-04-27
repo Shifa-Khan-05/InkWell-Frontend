@@ -9,16 +9,17 @@ const Navbar = () => {
   const location = useLocation();
   const userId = localStorage.getItem('userId');
 
-  // Check login status on route change
+  // Sync login status when the route changes
   useEffect(() => {
     setIsLoggedIn(!!localStorage.getItem("token"));
   }, [location]);
 
- useEffect(() => {
+  // Fetch profile for the avatar
+  useEffect(() => {
     const fetchNavProfile = async () => {
-      if (isLoggedIn && userId && userId !== "null") {
+      // Check if user is logged in and has a valid ID
+      if (isLoggedIn && userId && userId !== "null" && userId !== "undefined") {
         try {
-          // ✅ FIXED: Using 'api' instance with relative path
           const response = await api.get(`/auth/profile/${userId}`);
           setUserData(response.data);
         } catch (err) {
@@ -36,29 +37,32 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between items-center px-6 py-4 bg-black border-b border-gray-800 sticky top-0 z-50">
-      <Link to="/">
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent cursor-pointer">
+    <nav className="flex justify-between items-center px-6 py-4 bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+      <Link to="/" className="flex items-center gap-2">
+        <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center shadow-sm">
+          <span className="text-white font-bold text-lg font-serif">iw</span>
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
           InkWell
         </h1>
       </Link>
 
       <div className="flex items-center space-x-6">
-        <Link className="text-gray-400 hover:text-white" to="/browse">
+        <Link className="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors" to="/browse">
           Browse
         </Link>
 
         {isLoggedIn ? (
           <>
-            <Link className="text-gray-400 hover:text-white" to="/dashboard">
+            <Link className="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors" to="/dashboard">
               Dashboard
             </Link>
 
-            {/* ✅ USER IMAGE ADDED HERE */}
-            <Link to="/profile-view" className="flex items-center gap-2 group">
-              <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-blue-500/20 group-hover:border-blue-500 transition-all shadow-lg">
+            {/* ✅ AVATAR LINK TO PROFILE-VIEW */}
+            <Link to="/profile-view" className="flex items-center gap-2 group ml-2">
+              <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-transparent group-hover:border-amber-500 transition-all shadow-sm active:scale-95">
                 <img 
-                  src={userData.profileImageUrl || `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=random`} 
+                  src={userData.profileImageUrl || `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
                   alt="Profile" 
                   className="w-full h-full object-cover" 
                 />
@@ -67,21 +71,21 @@ const Navbar = () => {
 
             <button
               onClick={handleLogout}
-              className="text-red-400 hover:text-red-500 font-medium transition"
+              className="text-sm font-medium text-slate-600 hover:text-red-500 transition-colors"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link className="text-gray-400 hover:text-white" to="/login">
-              Login
+            <Link className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors" to="/login">
+              Log in
             </Link>
             <Link
               to="/register"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:opacity-90"
+              className="bg-amber-600 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-amber-700 hover:shadow-md transition-all hover:-translate-y-0.5 active:scale-95"
             >
-              Join Now
+              Join
             </Link>
           </>
         )}

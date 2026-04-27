@@ -1,41 +1,43 @@
 import axios from 'axios';
 
+// Instance for standard Microservices (via Gateway)
 const api = axios.create({
-    baseURL: 'http://localhost:8080', // ✅ Always route through Gateway
+    baseURL: 'http://localhost:8080', 
     withCredentials: true 
 });
 
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token && token !== "null" && token !== "undefined") {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+// ✅ Instance for Website-Controller (BFF / Port 9000)
+export const webApi = axios.create({
+    baseURL: 'http://localhost:9000/api', 
+    withCredentials: true 
+});
 
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        const status = error.response?.status;
-        const currentPath = window.location.pathname;
+const setupInterceptors = (instance) => {
+    instance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('token');
+            if (token && token !== "null" && token !== "undefined") {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
 
-        // ✅ ONLY redirect on 401 Unauthorized
-        // Check for currentPath ensures we don't loop on the login page itself
-        if (status === 401 && currentPath !== '/login' && currentPath !== '/register') {
-            console.warn("Session Expired or Unauthorized - Redirecting...");
-            localStorage.clear();
-            window.location.href = '/login';
+    instance.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            const status = error.response?.status;
+            if (status === 401) {
+                localStorage.clear();
+                window.location.href = '/login';
+            }
+            return Promise.reject(error);
         }
-        
-        if (status === 404) {
-            console.error("Resource not found: ", error.config.url);
-        }
+    );
+};
 
-        return Promise.reject(error);
-    }
-);
+setupInterceptors(api);
+setupInterceptors(webApi);
 
 export default api;

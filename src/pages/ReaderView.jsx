@@ -62,59 +62,59 @@ const ReaderView = ({ onWriteClick }) => {
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             {/* Identity & Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div onClick={() => navigate('/profile')} className="p-8 bg-gray-900/40 border border-gray-800 rounded-[40px] cursor-pointer hover:border-blue-500/50 transition group shadow-2xl relative overflow-hidden">
+                <div onClick={() => navigate('/profile')} className="p-8 bg-white border border-stone-100 rounded-3xl cursor-pointer hover:border-amber-200 hover:-translate-y-1 transition-all duration-300 shadow-sm relative overflow-hidden group">
                     {role === 'PREMIUM' && (
-                        <div className="absolute top-6 right-6 flex items-center gap-1 bg-amber-500/10 border border-amber-500/50 px-3 py-1 rounded-full animate-pulse">
-                            <Crown size={12} className="text-amber-500" />
-                            <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">PRO</span>
+                        <div className="absolute top-6 right-6 flex items-center gap-1 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full animate-pulse">
+                            <Crown size={14} className="text-amber-600" />
+                            <span className="text-xs font-bold text-amber-700 tracking-wide">PRO</span>
                         </div>
                     )}
-                    <div className={`p-4 rounded-2xl w-fit mb-6 transition ${role === 'PREMIUM' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-600/10 text-blue-500'}`}>
+                    <div className={`p-4 rounded-2xl w-fit mb-6 transition-colors ${role === 'PREMIUM' ? 'bg-amber-50 text-amber-600' : 'bg-stone-100 text-stone-600 group-hover:bg-amber-50 group-hover:text-amber-600'}`}>
                         <UserCircle size={28} />
                     </div>
-                    <h3 className="text-2xl font-black italic uppercase tracking-tighter text-white">Identity</h3>
-                    <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mt-1">{role === 'PREMIUM' ? 'Premium Profile' : 'Manage Bio'}</p>
+                    <h3 className="text-2xl font-bold text-slate-900 tracking-tight leading-none mb-2">Identity</h3>
+                    <p className="text-slate-500 font-medium">{role === 'PREMIUM' ? 'Premium Profile' : 'Manage Bio'}</p>
                 </div>
                 
                 {(role === 'AUTHOR' || role === 'ADMIN' || role === 'PREMIUM') && (
-                    <div className="p-8 bg-gray-900/40 border border-gray-800 rounded-[40px] shadow-2xl group hover:border-purple-500/30 transition">
-                        <div className="bg-purple-600/10 p-4 rounded-2xl w-fit text-purple-500 mb-6"><BookOpen size={28} /></div>
-                        <h3 className="text-5xl font-black italic tracking-tighter text-white">{stats.posts}</h3>
-                        <p className="text-gray-500 text-xs font-black uppercase tracking-widest mt-1">Manuscripts</p>
+                    <div className="p-8 bg-white border border-stone-100 rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
+                        <div className="bg-indigo-50 p-4 rounded-2xl w-fit text-indigo-600 mb-6 group-hover:scale-105 transition-transform"><BookOpen size={28} /></div>
+                        <h3 className="text-5xl font-bold text-slate-900 tracking-tight leading-none mb-2">{stats.posts}</h3>
+                        <p className="text-slate-500 font-medium">Manuscripts</p>
                     </div>
                 )}
 
-                <div className="p-8 bg-gray-900/40 border border-gray-800 rounded-[40px] shadow-2xl group hover:border-red-500/30 transition">
-                    <div className="bg-red-600/10 p-4 rounded-2xl w-fit text-red-500 mb-6"><Heart size={28} /></div>
-                    <h3 className="text-5xl font-black italic tracking-tighter text-white">{stats.likes}</h3>
-                    <p className="text-gray-500 text-xs font-black uppercase tracking-widest mt-1">Appreciation</p>
+                <div className="p-8 bg-white border border-stone-100 rounded-3xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
+                    <div className="bg-rose-50 p-4 rounded-2xl w-fit text-rose-600 mb-6 group-hover:scale-105 transition-transform"><Heart size={28} /></div>
+                    <h3 className="text-5xl font-bold text-slate-900 tracking-tight leading-none mb-2">{stats.likes}</h3>
+                    <p className="text-slate-500 font-medium">Appreciation</p>
                 </div>
             </div>
 
             {/* Premium Upgrade Banner */}
             {role === 'READER' && (
-                <div className="bg-gradient-to-br from-amber-500/10 to-orange-600/20 border border-amber-500/30 rounded-[50px] p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden group">
-                    <Crown className="absolute -right-10 -bottom-10 size-64 text-amber-500/5 rotate-12 group-hover:text-amber-500/10 transition-all duration-700" />
-                    <div className="space-y-2 relative z-10">
-                        <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white">Unlock Premium</h2>
-                        <p className="text-gray-400 font-medium max-w-md">Access restricted manuscripts and a gold identity badge.</p>
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 rounded-[2.5rem] p-10 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm relative overflow-hidden group">
+                    <Crown className="absolute -right-8 -bottom-8 size-64 text-amber-200/50 rotate-12 group-hover:scale-110 transition-transform duration-700" />
+                    <div className="space-y-3 relative z-10">
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Unlock Premium</h2>
+                        <p className="text-slate-600 max-w-md text-lg leading-relaxed">Access restricted manuscripts and a gold identity badge.</p>
                     </div>
-                    <button onClick={handleUpgrade} disabled={isProcessing} className="px-10 py-5 bg-amber-500 text-black font-black uppercase italic tracking-tighter rounded-2xl hover:bg-white transition-all shadow-xl flex items-center gap-3 disabled:opacity-50 relative z-10">
+                    <button onClick={handleUpgrade} disabled={isProcessing} className="px-8 py-4 bg-amber-600 text-white font-bold rounded-2xl hover:bg-amber-700 hover:shadow-lg transition-all flex items-center gap-3 disabled:opacity-70 hover:-translate-y-0.5 active:scale-95 relative z-10 w-full md:w-auto justify-center">
                         {isProcessing ? <Loader2 className="animate-spin" /> : <><Crown size={20}/> Upgrade for ₹499</>}
                     </button>
                 </div>
             )}
 
             {/* ✅ NAVIGATION ACTION: Go back to feed */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className={`grid grid-cols-1 ${role === 'READER' ? 'lg:grid-cols-2' : ''} gap-8`}>
                 {role === 'READER' && <SubscriptionBox />}
-                <div className={`${role === 'PREMIUM' ? 'bg-blue-600' : 'bg-gray-900 border border-gray-800'} rounded-[45px] p-10 flex flex-col justify-center items-center text-center space-y-6 shadow-2xl group transition-all`}>
-                     <h2 className={`text-3xl font-black italic uppercase ${role === 'PREMIUM' ? 'text-white' : 'text-blue-500'}`}>
+                <div className="bg-white border border-stone-100 rounded-[2.5rem] p-12 flex flex-col justify-center items-center text-center space-y-8 shadow-sm hover:shadow-md transition-all">
+                     <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
                         {role === 'PREMIUM' ? 'Discover Stories' : 'Contribute Content'}
                      </h2>
                      <button 
                         onClick={() => role === 'PREMIUM' || role === 'READER' ? navigate('/browse') : onWriteClick()} 
-                        className="bg-black text-white px-10 py-5 rounded-2xl font-black uppercase italic text-xs flex items-center gap-3 hover:bg-white hover:text-black transition-all shadow-xl"
+                        className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:bg-slate-800 hover:shadow-lg transition-all hover:-translate-y-0.5 active:scale-95"
                      >
                          {role === 'PREMIUM' || role === 'READER' ? <><Compass size={20}/> Explore Feed</> : <><PenLine size={20}/> Draft Story</>}
                      </button>
