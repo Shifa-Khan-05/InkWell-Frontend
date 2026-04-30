@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "../hooks/ThemeContext";
 import api from '../api/axios';
 
 const Navbar = () => {
@@ -8,6 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userId = localStorage.getItem('userId');
+  const { theme, toggleTheme } = useTheme();
 
   // Sync login status when the route changes
   useEffect(() => {
@@ -37,29 +40,29 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="flex justify-between items-center px-6 py-4 bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+    <nav className="flex justify-between items-center px-6 py-4 bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-50 shadow-sm transition-colors duration-300">
       <Link to="/" className="flex items-center gap-2">
         <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center shadow-sm">
           <span className="text-white font-bold text-lg font-serif">iw</span>
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">
           InkWell
         </h1>
       </Link>
 
       <div className="flex items-center space-x-6">
-        <Link className="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors" to="/browse">
+        <Link className="text-sm font-medium text-muted-foreground hover:text-amber-600 transition-colors" to="/browse">
           Browse
         </Link>
 
         {isLoggedIn ? (
           <>
-            <Link className="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors" to="/dashboard">
+            <Link className="text-sm font-medium text-muted-foreground hover:text-amber-600 transition-colors" to="/dashboard">
               Dashboard
             </Link>
 
-            {/* ✅ AVATAR LINK TO PROFILE-VIEW */}
-            <Link to="/profile-view" className="flex items-center gap-2 group ml-2">
+            {/* ✅ AVATAR LINK TO PROFILE */}
+            <Link to="/profile" className="flex items-center gap-2 group ml-2">
               <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-transparent group-hover:border-amber-500 transition-all shadow-sm active:scale-95">
                 <img 
                   src={userData.profileImageUrl || `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
@@ -71,14 +74,14 @@ const Navbar = () => {
 
             <button
               onClick={handleLogout}
-              className="text-sm font-medium text-slate-600 hover:text-red-500 transition-colors"
+              className="text-sm font-medium text-muted-foreground hover:text-red-500 transition-colors"
             >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors" to="/login">
+            <Link className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" to="/login">
               Log in
             </Link>
             <Link
@@ -89,6 +92,18 @@ const Navbar = () => {
             </Link>
           </>
         )}
+
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-full bg-accent hover:bg-accent/80 transition-all active:scale-90"
+          aria-label="Toggle Theme"
+        >
+          {theme === 'light' ? (
+            <Moon size={20} className="text-slate-700" />
+          ) : (
+            <Sun size={20} className="text-amber-400" />
+          )}
+        </button>
       </div>
     </nav>
   );

@@ -24,11 +24,14 @@ const OAuthSuccess = () => {
 }, [location, navigate]);
 
     return (
-        <div className="min-h-screen bg-black flex flex-col items-center justify-center space-y-4">
-            <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-            <div className="text-blue-500 font-black uppercase tracking-widest text-sm">
-                Syncing Identity...
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-6 transition-colors duration-300">
+            <div className="w-14 h-14 border-4 border-muted border-t-primary rounded-full animate-spin shadow-lg"></div>
+            <div className="text-primary font-bold uppercase tracking-[0.3em] text-xs">
+                Synchronizing Identity
             </div>
+            <p className="text-muted-foreground/60 text-[10px] uppercase font-medium animate-pulse">
+                establishing secure connection...
+            </p>
         </div>
     );
 };

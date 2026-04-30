@@ -1,32 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, CheckCheck, Trash2, Heart, MessageSquare } from 'lucide-react';
+import { Bell, CheckCheck, Trash2, Heart, MessageSquare, RefreshCw } from 'lucide-react';
 import api from '../api/axios';
 
 const NotificationBell = () => {
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const userId = localStorage.getItem('userId');
 
     const fetchNotifications = async () => {
         if (!userId) return;
+        setIsRefreshing(true);
         try {
             const [listRes, countRes] = await Promise.all([
                 api.get(`/notifications/user/${userId}`),
                 api.get(`/notifications/unread-count/${userId}`)
             ]);
             
-            // Fix: Ensure we are setting an array even if data is null/undefined
             setNotifications(listRes.data || []);
             setUnreadCount(countRes.data || 0);
         } catch (err) {
             console.error("Failed to fetch alerts", err);
+        } finally {
+            setIsRefreshing(false);
         }
     };
 
     useEffect(() => {
         fetchNotifications();
-        const interval = setInterval(fetchNotifications, 30000);
+        const interval = setInterval(fetchNotifications, 60000); // Check every minute
         return () => clearInterval(interval);
     }, [userId]);
 
@@ -62,11 +65,11 @@ const NotificationBell = () => {
             {/* Toggle Button */}
             <button 
                 onClick={() => setIsOpen(!isOpen)} 
-                className="p-2.5 bg-slate-900 border border-slate-800 rounded-full hover:bg-slate-800 transition-all relative group active:scale-95"
+                className="p-2.5 bg-accent border border-border rounded-full hover:bg-accent/80 transition-all relative group active:scale-95 shadow-sm"
             >
-                <Bell size={20} className="text-slate-400 group-hover:text-white" />
+                <Bell size={20} className="text-muted-foreground group-hover:text-primary transition-colors" />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-slate-950 shadow-sm animate-pulse">
+                    <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full border-2 border-background shadow-sm animate-pulse">
                         {unreadCount}
                     </span>
                 )}
@@ -78,57 +81,64 @@ const NotificationBell = () => {
                     {/* Backdrop to close */}
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
                     
-                    <div className="absolute right-0 mt-4 w-85 bg-slate-950 border border-slate-800 rounded-[2rem] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
+                    <div className="absolute right-0 mt-4 w-96 bg-card border border-border rounded-[2rem] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
                         {/* Header */}
-                        <div className="p-5 border-b border-slate-900 flex justify-between items-center bg-slate-900/50">
+                        <div className="p-5 border-b border-border flex justify-between items-center bg-muted/30">
                             <div>
-                                <h3 className="text-xs font-black uppercase tracking-widest text-white">Notifications</h3>
-                                <p className="text-[10px] text-amber-500 font-bold uppercase tracking-wider mt-1">
-                                    {unreadCount} New Stories
+                                <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Notifications</h3>
+                                <p className="text-[10px] text-primary font-bold uppercase tracking-wider mt-1">
+                                    {unreadCount} New Alerts
                                 </p>
                             </div>
-                            <div className="flex gap-2">
-                                <button onClick={markAllRead} title="Mark all read" className="p-2 hover:bg-amber-500/10 text-amber-500 rounded-xl transition">
+                            <div className="flex gap-1">
+                                <button 
+                                    onClick={fetchNotifications} 
+                                    title="Refresh" 
+                                    className={`p-2 hover:bg-primary/10 text-primary rounded-xl transition ${isRefreshing ? 'animate-spin' : ''}`}
+                                >
+                                    <RefreshCw size={16} />
+                                </button>
+                                <button onClick={markAllRead} title="Mark all read" className="p-2 hover:bg-primary/10 text-primary rounded-xl transition">
                                     <CheckCheck size={16} />
                                 </button>
-                                <button onClick={clearHistory} title="Clear history" className="p-2 hover:bg-red-500/10 text-red-500 rounded-xl transition">
+                                <button onClick={clearHistory} title="Clear history" className="p-2 hover:bg-destructive/10 text-destructive rounded-xl transition">
                                     <Trash2 size={16} />
                                 </button>
                             </div>
                         </div>
 
                         {/* Notifications List */}
-                        <div className="max-h-96 overflow-y-auto custom-scrollbar bg-black/20">
+                        <div className="max-h-96 overflow-y-auto custom-scrollbar bg-background/50">
                             {notifications && notifications.length > 0 ? (
                                 notifications.map((note) => (
                                     <div 
-                                        key={note.notificationId || note.id} // Fixed: Fallback to .id if .notificationId is missing
-                                        className={`p-4 border-b border-slate-900 flex gap-4 hover:bg-white/5 transition cursor-pointer ${!note.isRead ? 'bg-amber-500/5 border-l-2 border-l-amber-500' : ''}`}
+                                        key={note.notificationId || note.id}
+                                        className={`p-4 border-b border-border flex gap-4 hover:bg-accent/50 transition cursor-pointer ${!note.isRead ? 'bg-primary/5 border-l-4 border-l-primary' : ''}`}
                                         onClick={() => markAsRead(note.notificationId || note.id)}
                                     >
-                                        <div className={`p-2.5 rounded-xl h-fit ${!note.isRead ? 'bg-amber-500/20 text-amber-500' : 'bg-slate-800 text-slate-600'}`}>
+                                        <div className={`p-2.5 rounded-xl h-fit ${!note.isRead ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
                                             {note.type === 'LIKE' ? <Heart size={14} fill={!note.isRead ? "currentColor" : "none"} /> : <MessageSquare size={14} />}
                                         </div>
 
                                         <div className="flex-1 space-y-1">
-                                            <p className={`text-xs leading-relaxed ${!note.isRead ? 'text-slate-100 font-bold' : 'text-slate-500'}`}>
+                                            <p className={`text-xs leading-relaxed ${!note.isRead ? 'text-foreground font-bold' : 'text-muted-foreground'}`}>
                                                 {note.message || "New activity on your post"}
                                             </p>
                                             <div className="flex justify-between items-center">
-                                                <span className="text-[8px] font-black uppercase text-slate-700 tracking-tighter">
+                                                <span className="text-[9px] font-bold uppercase text-muted-foreground/60 tracking-tight">
                                                     {note.createdAt ? new Date(note.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
                                                 </span>
-                                                {!note.isRead && <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]"></div>}
+                                                {!note.isRead && <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(225,29,72,0.6)]"></div>}
                                             </div>
                                         </div>
                                     </div>
                                 ))
                             ) : (
                                 <div className="p-16 text-center flex flex-col items-center">
-                                    <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mb-4 opacity-40">
-                                        <Bell size={24} className="text-slate-400" />
+                                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4 opacity-40">
+                                        <Bell size={24} className="text-muted-foreground" />
                                     </div>
-                                    <p className="text-slate-600 italic text-[10px] uppercase tracking-[0.3em] font-black">
+                                    <p className="text-muted-foreground italic text-[10px] uppercase tracking-[0.3em] font-black">
                                         Quiet for now...
                                     </p>
                                 </div>

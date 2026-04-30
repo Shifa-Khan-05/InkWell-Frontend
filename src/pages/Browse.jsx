@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { Search, User, Clock, BookOpen, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import { Search, User, BookOpen, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import usePageTitle from '../hooks/usePageTitle';
 
 const Browse = () => {
+    usePageTitle('Browse');
     const [allPosts, setAllPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -35,29 +37,29 @@ const Browse = () => {
     }, [searchTerm, allPosts]);
 
     if (loading) return (
-        <div className="min-h-screen bg-stone-50 text-slate-900 selection:bg-amber-200">
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-6 py-16 space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-stone-200 pb-12 animate-pulse">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-12 animate-pulse">
                     <div className="space-y-4">
-                        <div className="h-16 w-64 bg-stone-200 rounded-lg"></div>
-                        <div className="h-4 w-96 bg-stone-200 rounded"></div>
+                        <div className="h-16 w-64 bg-muted rounded-lg"></div>
+                        <div className="h-4 w-96 bg-muted rounded"></div>
                     </div>
-                    <div className="w-full md:w-96 h-14 bg-stone-200 rounded-2xl"></div>
+                    <div className="w-full md:w-96 h-14 bg-muted rounded-2xl"></div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     {[1, 2, 3, 4, 5, 6].map((n) => (
-                        <div key={n} className="bg-white border border-stone-100 rounded-3xl overflow-hidden shadow-sm flex flex-col animate-pulse h-[450px]">
-                            <div className="h-60 w-full bg-stone-100"></div>
+                        <div key={n} className="bg-card border border-border rounded-3xl overflow-hidden shadow-sm flex flex-col animate-pulse h-[450px]">
+                            <div className="h-60 w-full bg-muted"></div>
                             <div className="p-8 flex flex-col flex-1 gap-4">
-                                <div className="h-6 w-3/4 bg-stone-200 rounded"></div>
-                                <div className="h-4 w-full bg-stone-100 rounded mt-2"></div>
-                                <div className="h-4 w-2/3 bg-stone-100 rounded"></div>
-                                <div className="mt-auto pt-6 border-t border-stone-50 flex items-center justify-between">
+                                <div className="h-6 w-3/4 bg-muted rounded"></div>
+                                <div className="h-4 w-full bg-muted rounded mt-2"></div>
+                                <div className="h-4 w-2/3 bg-muted rounded"></div>
+                                <div className="mt-auto pt-6 border-t border-border flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-stone-200"></div>
-                                        <div className="h-4 w-24 bg-stone-200 rounded"></div>
+                                        <div className="w-10 h-10 rounded-full bg-muted"></div>
+                                        <div className="h-4 w-24 bg-muted rounded"></div>
                                     </div>
-                                    <div className="h-5 w-5 bg-stone-200 rounded-full"></div>
+                                    <div className="h-5 w-5 bg-muted rounded-full"></div>
                                 </div>
                             </div>
                         </div>
@@ -68,26 +70,26 @@ const Browse = () => {
     );
 
     return (
-        <div className="min-h-screen bg-stone-50 text-slate-900 selection:bg-amber-200 selection:text-amber-900 font-sans">
+        <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary font-sans transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-6 py-16 space-y-12">
                 
                 {/* Header & Search Section */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-stone-200 pb-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-12">
                     <div className="space-y-4">
-                        <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-slate-900 leading-none">
-                            Explore <span className="text-amber-600 italic font-serif">Inspiration</span>
+                        <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-none">
+                            Explore <span className="text-primary italic font-serif">Inspiration</span>
                         </h1>
-                        <p className="text-slate-500 max-w-md text-lg font-light leading-relaxed">
+                        <p className="text-muted-foreground max-w-md text-lg font-light leading-relaxed">
                             Discover perspectives from our global community of thinkers and creators.
                         </p>
                     </div>
 
                     <div className="relative w-full md:w-96 group">
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-stone-400 group-focus-within:text-amber-600 transition-colors" size={20} />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={20} />
                         <input 
                             type="text"
                             placeholder="Search by title or author..."
-                            className="w-full bg-white border border-stone-200 shadow-sm rounded-2xl py-4 pl-14 pr-4 text-slate-900 font-medium focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all placeholder:text-stone-400"
+                            className="w-full bg-card border border-border shadow-sm rounded-2xl py-4 pl-14 pr-4 text-foreground font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/40"
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
@@ -96,71 +98,78 @@ const Browse = () => {
                 {/* Content Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                     {filteredPosts.length > 0 ? filteredPosts.map((post) => (
-                        <Link to={`/post/${post.slug}`} key={post.postId} className="group h-full">
-                            <article className="bg-white border border-stone-100 rounded-3xl overflow-hidden h-full hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group/article">
-                                
-                                {/* ✅ Real Media Integration */}
-                                <div className="h-60 w-full overflow-hidden bg-stone-100 relative">
-                                    {post.featuredImageUrl ? (
-                                        <img 
-                                            src={post.featuredImageUrl} 
-                                            alt={post.title} 
-                                            className="w-full h-full object-cover group-hover/article:scale-105 transition-transform duration-700 ease-out"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-stone-300 bg-stone-100">
-                                            <ImageIcon size={48} strokeWidth={1.5} />
-                                        </div>
-                                    )}
-                                    <div className="absolute top-4 right-4">
-                                        <span className="bg-white/90 backdrop-blur-sm text-slate-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
-                                            {post.readTimeMin || '3'} min read
-                                        </span>
+                        <article key={post.postId} className="bg-card border border-border rounded-3xl overflow-hidden h-full hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group/article">
+                            
+                            {/* Card Image Area (Link to Post) */}
+                            <Link to={`/post/${post.slug}`} className="h-60 w-full overflow-hidden bg-muted relative block">
+                                {post.featuredImageUrl ? (
+                                    <img 
+                                        src={post.featuredImageUrl} 
+                                        alt={post.title} 
+                                        className="w-full h-full object-cover group-hover/article:scale-105 transition-transform duration-700 ease-out"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-muted">
+                                        <ImageIcon size={48} strokeWidth={1.5} />
                                     </div>
+                                )}
+                                <div className="absolute top-4 right-4">
+                                    <span className="bg-background/90 backdrop-blur-sm text-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                                        {post.readTimeMin || '3'} min read
+                                    </span>
                                 </div>
+                            </Link>
 
-                                <div className="p-8 flex flex-col flex-1">
-                                    <div className="flex-1 space-y-3">
-                                        <h2 className="text-2xl font-bold text-slate-900 leading-tight group-hover/article:text-amber-600 transition-colors line-clamp-2">
+                            <div className="p-8 flex flex-col flex-1">
+                                <div className="flex-1 space-y-3">
+                                    <Link to={`/post/${post.slug}`}>
+                                        <h2 className="text-2xl font-bold text-foreground leading-tight hover:text-primary transition-colors line-clamp-2">
                                             {post.title}
                                         </h2>
-                                        
-                                        <p className="text-slate-600 text-sm leading-relaxed line-clamp-3">
-                                            {post.excerpt || "A deep dive into narrative exploration within the InkWell framework..."}
-                                        </p>
-                                    </div>
-
-                                    <div className="mt-8 pt-6 border-t border-stone-100 flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 overflow-hidden shadow-sm">
-                                                {post.authorImageUrl ? (
-                                                    <img src={post.authorImageUrl} alt="Author" className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <User size={18} />
-                                                )}
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-semibold text-slate-800 group-hover/article:text-amber-600 transition-colors">
-                                                    {post.fullName || "InkWell Author"}
-                                                </span>
-                                                <span className="text-xs text-slate-500">Contributor</span>
-                                            </div>
-                                        </div>
-                                        <ArrowRight size={20} className="text-stone-400 group-hover/article:text-amber-600 group-hover/article:translate-x-1 transition-all" />
-                                    </div>
+                                    </Link>
+                                    
+                                    <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
+                                        {post.excerpt || "A deep dive into narrative exploration within the InkWell framework..."}
+                                    </p>
                                 </div>
-                            </article>
-                        </Link>
+
+                                <div className="mt-8 pt-6 border-t border-border flex items-center justify-between">
+                                    {/* Author Profile Link (PRO Access restricted via ProfileView) */}
+                                    <Link 
+                                        to={`/profile/${post.authorId}`} 
+                                        className="flex items-center gap-3 hover:opacity-80 transition-opacity group/author"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden shadow-sm ring-2 ring-transparent group-hover/author:ring-primary/20 transition-all">
+                                            {post.authorImageUrl ? (
+                                                <img src={post.authorImageUrl} alt="Author" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <User size={18} />
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-bold text-foreground group-hover/author:text-primary transition-colors">
+                                                {post.fullName || "InkWell Author"}
+                                            </span>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Profile View</span>
+                                        </div>
+                                    </Link>
+                                    
+                                    <Link to={`/post/${post.slug}`} className="p-2 rounded-full hover:bg-primary/10 transition-colors">
+                                        <ArrowRight size={20} className="text-muted-foreground group-hover/article:text-primary group-hover/article:translate-x-1 transition-all" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </article>
                     )) : (
-                        <div className="col-span-full py-32 flex flex-col items-center justify-center space-y-6 bg-white rounded-3xl border border-stone-100 shadow-sm">
-                            <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center text-amber-600">
+                        <div className="col-span-full py-32 flex flex-col items-center justify-center space-y-6 bg-card rounded-3xl border border-border shadow-sm">
+                            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary">
                                 <BookOpen size={40} className="opacity-80" />
                             </div>
                             <div className="text-center space-y-2 max-w-sm">
-                                <p className="text-slate-800 text-xl font-bold">
+                                <p className="text-foreground text-xl font-bold">
                                     No stories found
                                 </p>
-                                <p className="text-slate-500">We couldn't find any articles matching your search. Try adjusting your keywords or browse all posts.</p>
+                                <p className="text-muted-foreground">We couldn't find any articles matching your search. Try adjusting your keywords or browse all posts.</p>
                             </div>
                         </div>
                     )}

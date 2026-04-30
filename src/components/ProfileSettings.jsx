@@ -94,24 +94,24 @@ const ProfileSettings = () => {
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-transparent">
             <div className="flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-stone-200 border-t-amber-600 rounded-full animate-spin"></div>
-                <div className="text-slate-500 font-medium tracking-wide">Syncing Settings...</div>
+                <div className="w-12 h-12 border-4 border-muted border-t-primary rounded-full animate-spin"></div>
+                <div className="text-muted-foreground font-medium tracking-wide">Syncing Settings...</div>
             </div>
         </div>
     );
 
     return (
-        <div className="max-w-3xl mx-auto p-10 bg-white border border-stone-100 rounded-[3rem] mt-12 text-slate-900 shadow-sm mb-20 relative overflow-hidden">
-            <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 mb-8 transition-all group font-bold tracking-tight bg-stone-50 hover:bg-stone-100 px-4 py-2 rounded-full border border-stone-200">
+        <div className="max-w-3xl mx-auto p-10 bg-card border border-border rounded-[3rem] mt-12 text-foreground shadow-sm mb-20 relative overflow-hidden transition-colors duration-300">
+            <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-all group font-bold tracking-tight bg-muted hover:bg-muted/80 px-4 py-2 rounded-full border border-border">
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
             </button>
 
             <div className="flex justify-between items-start mb-12">
                 <h2 className="text-3xl md:text-4xl font-bold flex items-center gap-4 tracking-tight">
-                    <div className="p-3 bg-amber-50 rounded-2xl text-amber-600"><User size={28} /></div> Identity Control
+                    <div className="p-3 bg-primary/10 rounded-2xl text-primary"><User size={28} /></div> Identity Control
                 </h2>
                 {profile.authProvider === 'GOOGLE' && (
-                    <div className="flex items-center gap-2 bg-blue-50 border border-blue-200 px-4 py-2 rounded-xl text-blue-700 text-xs font-bold uppercase tracking-wider shadow-sm">
+                    <div className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-xl text-blue-500 text-xs font-bold uppercase tracking-wider shadow-sm">
                         <ShieldCheck size={16} /> Verified via Google
                     </div>
                 )}
@@ -119,43 +119,43 @@ const ProfileSettings = () => {
 
             <form onSubmit={handleUpdate} className="space-y-10 animate-in zoom-in-95 duration-300">
                 {/* Avatar Section */}
-                <div className="flex flex-col items-center gap-4 bg-stone-50 p-8 rounded-[2.5rem] border border-stone-200 shadow-inner">
+                <div className="flex flex-col items-center gap-4 bg-muted p-8 rounded-[2.5rem] border border-border shadow-inner">
                     <div className="relative group cursor-pointer" onClick={() => fileInputRef.current.click()}>
-                        <div className="w-32 h-32 rounded-full border border-stone-200 overflow-hidden bg-white shadow-sm transition group-hover:border-amber-300 group-hover:shadow-md">
+                        <div className="w-32 h-32 rounded-full border border-border overflow-hidden bg-card shadow-sm transition group-hover:border-primary/30 group-hover:shadow-md">
                             <img 
                                 src={previewUrl || `https://ui-avatars.com/api/?name=${profile.fullName || 'User'}&background=d97706&color=fff`} 
                                 alt="Avatar" 
                                 className="w-full h-full object-cover" 
                             />
                         </div>
-                        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition duration-300">
-                            <UploadCloud size={28} className="text-amber-600 mb-1" />
-                            <span className="text-[10px] font-bold uppercase text-amber-700 tracking-wider">Update Photo</span>
+                        <div className="absolute inset-0 bg-card/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition duration-300">
+                            <UploadCloud size={28} className="text-primary mb-1" />
+                            <span className="text-[10px] font-bold uppercase text-primary tracking-wider">Update Photo</span>
                         </div>
                         <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
                     </div>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-widest">Manuscript Portrait</p>
+                    <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Manuscript Portrait</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Basic Info */}
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Full Name</label>
                             <input 
                                 type="text" 
                                 value={profile.fullName} 
-                                className="w-full bg-white border border-stone-200 rounded-2xl p-4 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-bold text-slate-900 transition-all shadow-sm"
+                                className="w-full bg-muted border border-border rounded-2xl p-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm"
                                 onChange={(e) => setProfile({...profile, fullName: e.target.value})}
                                 required
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Username</label>
+                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Username</label>
                             <input 
                                 type="text" 
                                 value={profile.username} 
-                                className="w-full bg-white border border-stone-200 rounded-2xl p-4 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-bold text-amber-600 transition-all shadow-sm"
+                                className="w-full bg-muted border border-border rounded-2xl p-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-primary transition-all shadow-sm"
                                 onChange={(e) => setProfile({...profile, username: e.target.value})}
                             />
                         </div>
@@ -164,18 +164,18 @@ const ProfileSettings = () => {
                     {/* Sensitive / Metadata */}
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Age</label>
+                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Age</label>
                             <input 
                                 type="number" 
                                 value={profile.age} 
-                                className="w-full bg-white border border-stone-200 rounded-2xl p-4 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-bold text-slate-900 transition-all shadow-sm"
+                                className="w-full bg-muted border border-border rounded-2xl p-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm"
                                 onChange={(e) => setProfile({...profile, age: e.target.value})}
                             />
                         </div>
                         
                         {/* Password Field: Only for Local Users */}
                         <div className={`space-y-2 ${profile.authProvider === 'GOOGLE' ? 'opacity-50 pointer-events-none' : ''}`}>
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">
+                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">
                                 {profile.authProvider === 'GOOGLE' ? 'Password Locked' : 'Update Password'}
                             </label>
                             <div className="relative">
@@ -183,14 +183,14 @@ const ProfileSettings = () => {
                                     type={showPassword ? "text" : "password"} 
                                     placeholder={profile.authProvider === 'GOOGLE' ? "Linked to Google" : "Leave blank to keep current"}
                                     value={profile.password}
-                                    className="w-full bg-white border border-stone-200 rounded-2xl p-4 pr-12 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-bold text-slate-900 transition-all shadow-sm placeholder:text-stone-300"
+                                    className="w-full bg-muted border border-border rounded-2xl p-4 pr-12 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm placeholder:text-muted-foreground/40"
                                     onChange={(e) => setProfile({...profile, password: e.target.value})}
                                 />
                                 {profile.authProvider === 'LOCAL' && (
                                     <button 
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-4 top-4 text-slate-400 hover:text-amber-600 transition-colors z-10"
+                                        className="absolute right-4 top-4 text-muted-foreground hover:text-primary transition-colors z-10"
                                     >
                                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
@@ -201,9 +201,9 @@ const ProfileSettings = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Creative Philosophy (Bio)</label>
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Creative Philosophy (Bio)</label>
                     <textarea 
-                        className="w-full bg-white border border-stone-200 rounded-3xl p-6 h-32 outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 font-serif text-lg text-slate-700 transition-all shadow-sm placeholder:text-stone-300"
+                        className="w-full bg-muted border border-border rounded-3xl p-6 h-32 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-serif text-lg text-foreground transition-all shadow-sm placeholder:text-muted-foreground/40"
                         value={profile.bio}
                         placeholder="Share your creative thoughts..."
                         onChange={(e) => setProfile({...profile, bio: e.target.value})}
@@ -212,7 +212,7 @@ const ProfileSettings = () => {
 
                 <button 
                     type="submit" 
-                    className="w-full bg-slate-900 py-5 rounded-2xl font-bold uppercase text-white tracking-widest flex items-center justify-center gap-3 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95"
+                    className="w-full bg-foreground py-5 rounded-2xl font-bold uppercase text-background tracking-widest flex items-center justify-center gap-3 hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95"
                 >
                     <Save size={20} /> Save InkWell Identity
                 </button>

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTheme } from './hooks/ThemeContext';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -10,7 +11,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import OAuthSuccess from './pages/OAuthSuccess';
 import PostDetails from './pages/PostDetails';
-import Profile from './components/Profile'; // This is your "Identity Control" component
+import ProfileView from './pages/ProfileView'; // Use the enhanced page component
 import TaxonomyManager from './components/TaxonomyManager';
 import MediaLibrary from './components/MediaLibrary';
 import NewsletterManager from './pages/NewsletterManager';
@@ -19,11 +20,12 @@ import ResetPassword from './components/ResetPassword';
 
 const AppContent = () => {
   const location = useLocation();
+  const { theme } = useTheme();
   // Ensure Navbar is hidden on dashboard and success pages
   const hideNavbar = location.pathname.startsWith('/dashboard') || location.pathname === '/oauth-success';
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {!hideNavbar && <Navbar />} 
       
       <Routes>
@@ -35,8 +37,9 @@ const AppContent = () => {
         <Route path="/oauth-success" element={<OAuthSuccess />} />
         <Route path="/post/:slug" element={<PostDetails />} />
         
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile-view" element={<Profile />} />
+        <Route path="/profile" element={<ProfileView />} />
+        <Route path="/profile/:id" element={<ProfileView />} />
+        <Route path="/profile-view" element={<ProfileView />} />
         
         <Route path="/media-library" element={<MediaLibrary />} />
         <Route path="/taxonomy-manager" element={<TaxonomyManager />} />
@@ -45,7 +48,7 @@ const AppContent = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
 
-      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
+      <ToastContainer position="top-right" autoClose={3000} theme={theme} />
     </div>
   );
 };

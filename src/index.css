@@ -1,3 +1,112 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Rich Light Palette - "Warm Parchment" */
+    --background: 40 33% 98%; /* Warm white/cream */
+    --foreground: 224 71% 4%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+ 
+    --primary: 38 92% 50%; /* Vibrant Amber */
+    --primary-foreground: 40 33% 98%;
+ 
+    --secondary: 346 84% 61%; /* Soft Rose */
+    --secondary-foreground: 40 33% 98%;
+ 
+    --muted: 40 20% 94%;
+    --muted-foreground: 220 10% 40%;
+ 
+    --accent: 38 92% 50%;
+    --accent-foreground: 40 33% 98%;
+ 
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 40 20% 90%;
+    --input: 40 20% 90%;
+    --ring: 38 92% 50%;
+ 
+    --radius: 1.5rem;
+  }
+ 
+  .dark {
+    /* Rich Dark Palette - "Midnight Gold" */
+    --background: 222 47% 11%; /* Deep Navy */
+    --foreground: 213 31% 91%;
+ 
+    --card: 222 47% 13%;
+    --card-foreground: 213 31% 91%;
+ 
+    --popover: 222 47% 11%;
+    --popover-foreground: 213 31% 91%;
+ 
+    --primary: 45 93% 47%; /* Rich Gold */
+    --primary-foreground: 222 47% 11%;
+ 
+    --secondary: 346 84% 61%;
+    --secondary-foreground: 213 31% 91%;
+ 
+    --muted: 222 47% 15%;
+    --muted-foreground: 215.4 16.3% 66.9%;
+ 
+    --accent: 45 93% 47%;
+    --accent-foreground: 222 47% 11%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 45 93% 47%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground transition-colors duration-500 font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-xl border border-white/10 dark:border-white/5 shadow-2xl;
+  }
+  
+  .golden-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-rose-500 to-amber-600;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-full font-bold hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:scale-95 transition-all;
+  }
+
+  .input-field {
+    @apply w-full bg-muted border border-border rounded-2xl px-6 py-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-foreground font-medium placeholder:text-muted-foreground/40;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full hover:bg-primary/30 transition-colors;
+}
+
+@keyframes animation-delay-2000 {
+  animation-delay: 2s;
+}
