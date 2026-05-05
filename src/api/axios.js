@@ -2,13 +2,13 @@ import axios from 'axios';
 
 // Instance for standard Microservices (via Gateway)
 const api = axios.create({
-    baseURL: 'http://localhost:8081', 
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8081', 
     withCredentials: true 
 });
 
 // ✅ Instance for Website-Controller (BFF / Port 8081)
 export const webApi = axios.create({
-    baseURL: 'http://localhost:8081/api', 
+    baseURL: import.meta.env.VITE_WEB_API_URL || 'http://localhost:8081/api', 
     withCredentials: true 
 });
 
