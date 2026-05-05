@@ -40,16 +40,16 @@ describe('ResetPassword Component', () => {
 
         // Assert
         expect(screen.getByText(/Refine Credentials/i)).toBeInTheDocument();
-        expect(screen.getByPlaceholderText(/New Password/i)).toBeInTheDocument();
-        expect(screen.getByPlaceholderText(/Confirm New Password/i)).toBeInTheDocument();
+        expect(screen.getByLabelText('new-password')).toBeInTheDocument();
+        expect(screen.getByLabelText('confirm-password')).toBeInTheDocument();
         expect(screen.getByText(/Update Password/i)).toBeInTheDocument();
     });
 
     it('shows an error toast if passwords do not match', () => {
         // Arrange
         render(<MockResetPassword />);
-        const passwordInput = screen.getByPlaceholderText('New Password');
-        const confirmInput = screen.getByPlaceholderText('Confirm New Password');
+        const passwordInput = screen.getByLabelText('new-password');
+        const confirmInput = screen.getByLabelText('confirm-password');
         const submitBtn = screen.getByText(/Update Password/i);
 
         // Act
@@ -66,8 +66,8 @@ describe('ResetPassword Component', () => {
         api.post.mockResolvedValueOnce({ data: { message: 'Success' } });
         render(<MockResetPassword />);
         
-        const passwordInput = screen.getByPlaceholderText('New Password');
-        const confirmInput = screen.getByPlaceholderText('Confirm New Password');
+        const passwordInput = screen.getByLabelText('new-password');
+        const confirmInput = screen.getByLabelText('confirm-password');
         const submitBtn = screen.getByText(/Update Password/i);
 
         // Act
@@ -90,8 +90,8 @@ describe('ResetPassword Component', () => {
         api.post.mockRejectedValueOnce(new Error('Invalid token'));
         render(<MockResetPassword />);
         
-        const passwordInput = screen.getByPlaceholderText('New Password');
-        const confirmInput = screen.getByPlaceholderText('Confirm New Password');
+        const passwordInput = screen.getByLabelText('new-password');
+        const confirmInput = screen.getByLabelText('confirm-password');
         const submitBtn = screen.getByText(/Update Password/i);
 
         // Act
@@ -111,8 +111,8 @@ describe('ResetPassword Component', () => {
         api.post.mockReturnValue(new Promise(resolve => setTimeout(resolve, 100)));
         render(<MockResetPassword />);
         
-        const passwordInput = screen.getByPlaceholderText('New Password');
-        const confirmInput = screen.getByPlaceholderText('Confirm New Password');
+        const passwordInput = screen.getByLabelText('new-password');
+        const confirmInput = screen.getByLabelText('confirm-password');
         const submitBtn = screen.getByText(/Update Password/i);
 
         // Act

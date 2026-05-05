@@ -87,6 +87,7 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
+                            aria-label="Toggle Password Visibility"
                             className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-all"
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

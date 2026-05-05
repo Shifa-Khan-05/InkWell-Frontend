@@ -90,8 +90,11 @@ describe('Profile Component', () => {
         expect(passwordInput.type).toBe('password');
 
         // Toggle eye button
-        const toggleBtn = screen.getByPlaceholderText(/••••••••/i).parentElement.querySelector('button');
+        const toggleBtn = screen.getByRole('button', { name: /toggle/i });
         fireEvent.click(toggleBtn);
         expect(passwordInput.type).toBe('text');
+        
+        fireEvent.click(toggleBtn);
+        expect(passwordInput.type).toBe('password');
     });
 });

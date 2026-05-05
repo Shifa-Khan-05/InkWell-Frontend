@@ -13,11 +13,13 @@ const Register = () => {
         username: '',
         email: '',
         password: '',
-        role: 'READER' 
+        role: 'READER',
+        otp: ''
     });
 
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [otpSent, setOtpSent] = useState(false);
     const navigate = useNavigate();
 
     const validate = () => {
@@ -30,9 +32,29 @@ const Register = () => {
         return Object.keys(temp).length === 0;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSendOtp = async (e) => {
         e.preventDefault();
         if (!validate()) return;
+
+        setLoading(true);
+        try {
+            await api.post('/auth/send-otp', { email: formData.email });
+            toast.success("OTP sent to your email!");
+            setOtpSent(true);
+        } catch (err) {
+            const errorMsg = err.response?.data?.message || err.response?.data || "Failed to send OTP ❌";
+            toast.error(typeof errorMsg === 'string' ? errorMsg : "Failed to send OTP");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        if (!formData.otp.trim()) {
+            setErrors({ ...errors, otp: "OTP is required" });
+            return;
+        }
 
         setLoading(true);
         try {
@@ -43,8 +65,8 @@ const Register = () => {
                 navigate('/login');
             }, 1500);
         } catch (err) {
-            const errorMsg = err.response?.data || "Registration failed ❌";
-            toast.error(errorMsg);
+            const errorMsg = err.response?.data?.message || err.response?.data || "Registration failed ❌";
+            toast.error(typeof errorMsg === 'string' ? errorMsg : "Registration failed");
         } finally {
             setLoading(false);
         }
@@ -74,15 +96,17 @@ const Register = () => {
                     <p className="text-muted-foreground mt-2 font-medium">Create your account to start writing</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={otpSent ? handleRegister : handleSendOtp} className="space-y-4">
                     {/* Role Toggle */}
                     <div className="flex p-1.5 bg-muted rounded-2xl mb-6 shadow-inner">
                         <button type="button" onClick={() => setFormData({ ...formData, role: 'READER' })}
-                            className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${formData.role === 'READER' ? 'bg-card text-primary shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}`}>
+                            disabled={otpSent}
+                            className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${formData.role === 'READER' ? 'bg-card text-primary shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'} ${otpSent ? 'opacity-50 cursor-not-allowed' : ''}`}>
                             Reader
                         </button>
                         <button type="button" onClick={() => setFormData({ ...formData, role: 'AUTHOR' })}
-                            className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${formData.role === 'AUTHOR' ? 'bg-card text-foreground shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'}`}>
+                            disabled={otpSent}
+                            className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 ${formData.role === 'AUTHOR' ? 'bg-card text-foreground shadow-sm border border-border' : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'} ${otpSent ? 'opacity-50 cursor-not-allowed' : ''}`}>
                             Author
                         </button>
                     </div>
@@ -90,8 +114,8 @@ const Register = () => {
                     <div className="space-y-1">
                         <div className="relative group">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                            <input type="text" placeholder="Full Name" className="w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal"
-                                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} />
+                            <input type="text" placeholder="Full Name" disabled={otpSent} className={`w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal ${otpSent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} value={formData.fullName} />
                         </div>
                         {errors.fullName && <p className="text-destructive text-xs pl-2 pt-1 font-medium">{errors.fullName}</p>}
                     </div>
@@ -99,8 +123,8 @@ const Register = () => {
                     <div className="space-y-1">
                         <div className="relative group">
                             <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                            <input type="text" placeholder="Username" className="w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal"
-                                onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
+                            <input type="text" placeholder="Username" disabled={otpSent} className={`w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal ${otpSent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                onChange={(e) => setFormData({ ...formData, username: e.target.value })} value={formData.username} />
                         </div>
                         {errors.username && <p className="text-destructive text-xs pl-2 pt-1 font-medium">{errors.username}</p>}
                     </div>
@@ -108,8 +132,8 @@ const Register = () => {
                     <div className="space-y-1">
                         <div className="relative group">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                            <input type="email" placeholder="Email address" className="w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal"
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                            <input type="email" placeholder="Email address" disabled={otpSent} className={`w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal ${otpSent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })} value={formData.email} />
                         </div>
                         {errors.email && <p className="text-destructive text-xs pl-2 pt-1 font-medium">{errors.email}</p>}
                     </div>
@@ -117,14 +141,28 @@ const Register = () => {
                     <div className="space-y-1 pb-2">
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                            <input type="password" placeholder="Password (min 6 chars)" className="w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal"
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                            <input type="password" placeholder="Password (min 6 chars)" disabled={otpSent} className={`w-full pl-12 pr-4 py-4 bg-muted border border-border rounded-2xl text-foreground font-medium outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal ${otpSent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })} value={formData.password} />
                         </div>
                         {errors.password && <p className="text-destructive text-xs pl-2 pt-1 font-medium">{errors.password}</p>}
                     </div>
 
+                    {otpSent && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-1 pb-2">
+                            <div className="relative group">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-primary transition-colors" size={18} />
+                                <input type="text" placeholder="Enter 6-digit OTP" className="w-full pl-12 pr-4 py-4 bg-background border-2 border-primary/50 rounded-2xl text-foreground font-bold outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-muted-foreground/40 placeholder:font-normal text-center tracking-widest"
+                                    onChange={(e) => setFormData({ ...formData, otp: e.target.value })} value={formData.otp} maxLength={6} />
+                            </div>
+                            {errors.otp && <p className="text-destructive text-xs pl-2 pt-1 font-medium">{errors.otp}</p>}
+                            <p className="text-xs text-center text-muted-foreground mt-2">
+                                Please check your email for the OTP.
+                            </p>
+                        </motion.div>
+                    )}
+
                     <button type="submit" disabled={loading} className={`w-full py-4 rounded-2xl font-bold text-background transition-all duration-300 ${loading ? "bg-muted text-muted-foreground cursor-not-allowed" : "bg-foreground hover:bg-foreground/90 hover:shadow-xl hover:-translate-y-0.5 active:scale-95"}`}>
-                        {loading ? "Creating Account..." : "Create Account"}
+                        {loading ? "Please wait..." : (otpSent ? "Verify & Register" : "Send Verification OTP")}
                     </button>
                     
                     <p className="text-center text-muted-foreground mt-6 text-sm font-medium">

@@ -40,9 +40,7 @@ describe('Dashboard Page', () => {
         
         expect(screen.getByText(/Loading workspace.../i)).toBeInTheDocument();
         
-        await waitFor(() => {
-            expect(screen.getByText(/Test User/i)).toBeInTheDocument();
-        });
+        expect(await screen.findByText(/Test User/i)).toBeInTheDocument();
     });
 
     it('shows limited options for READER role', async () => {
@@ -50,9 +48,7 @@ describe('Dashboard Page', () => {
         api.get.mockResolvedValueOnce({ data: { fullName: 'Reader User' } });
         render(<MockDashboard />);
 
-        await waitFor(() => {
-            expect(screen.getByText(/Reader User/i)).toBeInTheDocument();
-        });
+        expect(await screen.findByText(/Reader User/i)).toBeInTheDocument();
 
         expect(screen.queryByText(/System Admin/i)).not.toBeInTheDocument();
         expect(screen.queryByText(/My Content/i)).not.toBeInTheDocument();
@@ -63,10 +59,8 @@ describe('Dashboard Page', () => {
         api.get.mockResolvedValueOnce({ data: { fullName: 'Admin User' } });
         render(<MockDashboard />);
 
-        await waitFor(() => {
-            expect(screen.getByText(/System Admin/i)).toBeInTheDocument();
-            expect(screen.getByText(/Identity Control/i)).toBeInTheDocument();
-        });
+        expect(await screen.findByText(/System Admin/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Identity Control/i)).toBeInTheDocument();
     });
 
     it('switches tabs correctly', async () => {
@@ -74,22 +68,18 @@ describe('Dashboard Page', () => {
         api.get.mockResolvedValueOnce({ data: { fullName: 'Admin User' } });
         render(<MockDashboard />);
 
-        await waitFor(() => {
-            const taxonomyBtn = screen.getByText(/Taxonomy Center/i);
-            fireEvent.click(taxonomyBtn);
-        });
+        const taxonomyBtn = await screen.findByText(/Taxonomy Center/i);
+        fireEvent.click(taxonomyBtn);
 
-        expect(screen.getByText(/Taxonomy Manager/i)).toBeInTheDocument();
+        expect(await screen.findByText(/Taxonomy Manager/i)).toBeInTheDocument();
     });
 
     it('handles logout', async () => {
         api.get.mockResolvedValueOnce({ data: { fullName: 'Admin User' } });
         render(<MockDashboard />);
 
-        await waitFor(() => {
-            const logoutBtn = screen.getByText(/Logout/i);
-            fireEvent.click(logoutBtn);
-        });
+        const logoutBtn = await screen.findByText(/Logout/i);
+        fireEvent.click(logoutBtn);
 
         expect(localStorage.getItem('token')).toBeNull();
     });

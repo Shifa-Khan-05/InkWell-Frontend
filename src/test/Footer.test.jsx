@@ -24,9 +24,12 @@ describe('Footer Component', () => {
 
     it('renders branding and links', () => {
         render(<MockFooter />);
-        expect(screen.getByText(/InkWell/i)).toBeInTheDocument();
+        // Use getAllByText to handle potential multiple InkWell matches or be more specific
+        const brandingElements = screen.getAllByText(/InkWell/i);
+        expect(brandingElements.length).toBeGreaterThan(0);
+        
         expect(screen.getByText(/Published Works/i)).toBeInTheDocument();
-        expect(screen.getByText(/support@inkwell.com/i)).toBeInTheDocument();
+        expect(screen.getByText(/support@inkwell\.com/i)).toBeInTheDocument();
     });
 
     it('handles newsletter subscription', async () => {

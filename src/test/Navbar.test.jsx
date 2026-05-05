@@ -23,7 +23,7 @@ describe('InkWell Navbar', () => {
   
   it('renders the InkWell title', () => {
     render(<MockNavbar />);
-    const titleElement = screen.getByText(/InkWell/i);
+    const titleElement = screen.getByRole('heading', { name: /InkWell/i });
     expect(titleElement).toBeInTheDocument();
   });
 
@@ -31,12 +31,7 @@ describe('InkWell Navbar', () => {
     render(<MockNavbar />);
     const themeBtn = screen.getByLabelText(/Toggle Theme/i);
     
-    // Check initial state (default is light -> moon icon)
-    // In our code, Sun/Moon are components, we can check for their presence via aria-label or just the toggle action
     fireEvent.click(themeBtn);
-    
-    // Verify toggle was called (logic check)
-    // We could check if localStorage was updated or if the class on documentElement changed if we wanted to be more thorough
   });
 
   it('shows Login button when user is not logged in', () => {
@@ -52,12 +47,10 @@ describe('InkWell Navbar', () => {
     
     render(<MockNavbar />);
     
-    expect(screen.getByText(/Dashboard/i)).toBeInTheDocument();
-    expect(screen.getByText(/Logout/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Dashboard/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Logout/i)).toBeInTheDocument();
     
-    await waitFor(() => {
-      expect(api.get).toHaveBeenCalledWith('/auth/profile/123');
-    });
+    expect(api.get).toHaveBeenCalledWith('/auth/profile/123');
   });
 
   it('handles logout correctly', () => {

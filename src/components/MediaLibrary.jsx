@@ -104,7 +104,7 @@ useEffect(() => {
                         <UploadCloud size={18} /> {uploading ? 'Uploading...' : 'Add Asset'}
                     </button>
                 )}
-                <input type="file" ref={fileInputRef} className="hidden" onChange={handleUpload} />
+                <input type="file" ref={fileInputRef} className="hidden" aria-label="Upload Media" onChange={handleUpload} />
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">

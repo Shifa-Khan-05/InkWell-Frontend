@@ -62,6 +62,7 @@ const ResetPassword = () => {
                             type="password" 
                             required
                             placeholder="New Password"
+                            aria-label="new-password"
                             className="w-full bg-muted border border-border rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-foreground placeholder:text-muted-foreground/40"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -74,6 +75,7 @@ const ResetPassword = () => {
                             type="password" 
                             required
                             placeholder="Confirm New Password"
+                            aria-label="confirm-password"
                             className="w-full bg-muted border border-border rounded-2xl py-4 pl-12 pr-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-medium text-foreground placeholder:text-muted-foreground/40"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}

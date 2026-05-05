@@ -11,6 +11,7 @@ const ReaderView = ({ onWriteClick }) => {
     const navigate = useNavigate();
     const [stats, setStats] = useState({ posts: 0, likes: 0 });
     const [isProcessing, setIsProcessing] = useState(false);
+    const [showRoleRequestModal, setShowRoleRequestModal] = useState(false);
     
     const userId = localStorage.getItem('userId');
     const role = localStorage.getItem('role')?.replace('ROLE_', '').toUpperCase();
@@ -68,6 +69,16 @@ const ReaderView = ({ onWriteClick }) => {
         } catch (err) {
             toast.error("Gateway error.");
             setIsProcessing(false);
+        }
+    };
+
+    const handleRequestRole = async () => {
+        try {
+            await api.post(`/auth/users/${userId}/request-role?requestedRole=AUTHOR`);
+            toast.success("Role request sent to Admin successfully!");
+            setShowRoleRequestModal(false);
+        } catch (err) {
+            toast.error(err.response?.data?.message || "Failed to send request.");
         }
     };
 
@@ -154,21 +165,41 @@ const ReaderView = ({ onWriteClick }) => {
                 </div>
             )}
 
-            {/* ✅ NAVIGATION ACTION: Go back to feed */}
+             {/* ✅ NAVIGATION ACTION: Go back to feed */}
             <div className={`grid grid-cols-1 ${role === 'READER' ? 'lg:grid-cols-2' : ''} gap-8`}>
                 {role === 'READER' && <SubscriptionBox />}
                 <div className="bg-card border border-border rounded-[2.5rem] p-12 flex flex-col justify-center items-center text-center space-y-8 shadow-sm hover:shadow-md transition-all">
                      <h2 className="text-3xl font-bold text-foreground tracking-tight">
-                        {role === 'PREMIUM' ? 'Discover Stories' : 'Contribute Content'}
+                        {role === 'READER' ? 'Want to Publish Stories?' : (role === 'PREMIUM' ? 'Discover Stories' : 'Contribute Content')}
                      </h2>
                      <button 
-                        onClick={() => role === 'PREMIUM' || role === 'READER' ? navigate('/browse') : onWriteClick()} 
+                        onClick={() => {
+                            if (role === 'PREMIUM') navigate('/browse');
+                            else if (role === 'READER') setShowRoleRequestModal(true);
+                            else onWriteClick();
+                        }} 
                         className="bg-foreground text-background px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:bg-foreground/90 hover:shadow-lg transition-all hover:-translate-y-0.5 active:scale-95"
                      >
-                         {role === 'PREMIUM' || role === 'READER' ? <><Compass size={20}/> Explore Feed</> : <><PenLine size={20}/> Draft Story</>}
+                         {role === 'PREMIUM' ? <><Compass size={20}/> Explore Feed</> : (role === 'READER' ? <><PenLine size={20}/> Request Writer Role</> : <><PenLine size={20}/> Draft Story</>)}
                      </button>
                 </div>
             </div>
+
+            {/* Role Request Modal */}
+            {showRoleRequestModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-card border border-border rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+                        <h3 className="text-2xl font-bold mb-4 text-foreground">Become an Author</h3>
+                        <p className="text-muted-foreground mb-8">
+                            To start publishing your own stories, you need the Author role. Would you like to send a request to the platform administrators?
+                        </p>
+                        <div className="flex justify-end gap-4">
+                            <button onClick={() => setShowRoleRequestModal(false)} className="px-6 py-3 rounded-xl font-bold text-muted-foreground hover:bg-muted transition-colors">Cancel</button>
+                            <button onClick={handleRequestRole} className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:bg-primary/90 transition-all shadow-md">Send Request</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

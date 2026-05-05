@@ -50,19 +50,17 @@ describe('ModerationQueue Component', () => {
         
         render(<MockModerationQueue />);
 
-        await waitFor(() => screen.getByText(/"Great post!"/i));
+        expect(await screen.findByText(/"Great post!"/i)).toBeInTheDocument();
         
-        // Buttons are in the DOM but hidden until hover in real UI, 
-        // in RTL we can find them by their role or icon (if mocked correctly)
-        // Since we didn't mock lucide-react, we can query by container or just assume visibility in tests
-        const approveBtn = screen.getAllByRole('button')[0]; 
+        const approveBtn = screen.getByTitle('Approve');
         fireEvent.click(approveBtn);
 
         await waitFor(() => {
             expect(api.put).toHaveBeenCalledWith('/comments/1/approve');
             expect(toast.success).toHaveBeenCalledWith("Comment approved!");
-            expect(screen.queryByText(/"Great post!"/i)).not.toBeInTheDocument();
         });
+
+        expect(screen.queryByText(/"Great post!"/i)).not.toBeInTheDocument();
     });
 
     it('shows empty state when no comments are pending', async () => {

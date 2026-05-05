@@ -132,7 +132,7 @@ const ProfileSettings = () => {
                             <UploadCloud size={28} className="text-primary mb-1" />
                             <span className="text-[10px] font-bold uppercase text-primary tracking-wider">Update Photo</span>
                         </div>
-                        <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
+                        <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" aria-label="Update Avatar" />
                     </div>
                     <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Manuscript Portrait</p>
                 </div>
@@ -141,8 +141,9 @@ const ProfileSettings = () => {
                     {/* Basic Info */}
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Full Name</label>
+                            <label htmlFor="fullName" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Full Name</label>
                             <input 
+                                id="fullName"
                                 type="text" 
                                 value={profile.fullName} 
                                 className="w-full bg-muted border border-border rounded-2xl p-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm"
@@ -151,8 +152,9 @@ const ProfileSettings = () => {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Username</label>
+                            <label htmlFor="username" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Username</label>
                             <input 
+                                id="username"
                                 type="text" 
                                 value={profile.username} 
                                 className="w-full bg-muted border border-border rounded-2xl p-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-primary transition-all shadow-sm"
@@ -164,8 +166,9 @@ const ProfileSettings = () => {
                     {/* Sensitive / Metadata */}
                     <div className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Age</label>
+                            <label htmlFor="age" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Age</label>
                             <input 
+                                id="age"
                                 type="number" 
                                 value={profile.age} 
                                 className="w-full bg-muted border border-border rounded-2xl p-4 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm"
@@ -175,11 +178,12 @@ const ProfileSettings = () => {
                         
                         {/* Password Field: Only for Local Users */}
                         <div className={`space-y-2 ${profile.authProvider === 'GOOGLE' ? 'opacity-50 pointer-events-none' : ''}`}>
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">
+                            <label htmlFor="password" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">
                                 {profile.authProvider === 'GOOGLE' ? 'Password Locked' : 'Update Password'}
                             </label>
                             <div className="relative">
                                 <input 
+                                    id="password"
                                     type={showPassword ? "text" : "password"} 
                                     placeholder={profile.authProvider === 'GOOGLE' ? "Linked to Google" : "Leave blank to keep current"}
                                     value={profile.password}
@@ -201,8 +205,9 @@ const ProfileSettings = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Creative Philosophy (Bio)</label>
+                    <label htmlFor="bio" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Creative Philosophy (Bio)</label>
                     <textarea 
+                        id="bio"
                         className="w-full bg-muted border border-border rounded-3xl p-6 h-32 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-serif text-lg text-foreground transition-all shadow-sm placeholder:text-muted-foreground/40"
                         value={profile.bio}
                         placeholder="Share your creative thoughts..."

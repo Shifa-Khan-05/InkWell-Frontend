@@ -81,6 +81,7 @@ const NewsletterManager = () => {
                     {isTargeted && (
                         <input 
                             type="email"
+                            aria-label="Recipient Email"
                             className="w-full bg-muted border border-border p-5 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-foreground shadow-sm placeholder:text-muted-foreground/40"
                             placeholder="Recipient Email Address"
                             value={broadcast.email}
@@ -89,6 +90,7 @@ const NewsletterManager = () => {
                         />
                     )}
                     <input 
+                        aria-label="Subject"
                         className="w-full bg-muted border border-border p-5 rounded-2xl outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all font-bold text-foreground shadow-sm placeholder:text-muted-foreground/40 placeholder:font-medium"
                         placeholder="Subject Line"
                         value={broadcast.subject}
@@ -96,6 +98,7 @@ const NewsletterManager = () => {
                         required
                     />
                     <textarea 
+                        aria-label="Email Body"
                         className="w-full bg-muted border border-border p-5 rounded-3xl h-64 resize-none outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-foreground/80 shadow-sm placeholder:text-muted-foreground/40 placeholder:font-medium text-lg leading-relaxed"
                         placeholder="Write your story here..."
                         value={broadcast.body}

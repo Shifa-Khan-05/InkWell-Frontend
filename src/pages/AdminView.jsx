@@ -9,6 +9,7 @@ const AdminView = () => {
     usePageTitle('Admin Control');
     const navigate = useNavigate();
     const [users, setUsers] = useState([]);
+    const [roleRequests, setRoleRequests] = useState([]);
     const [stats, setStats] = useState({ totalUsers: 0, totalPosts: 0, platformStatus: "Initializing" });
     const [loading, setLoading] = useState(true);
 
@@ -26,6 +27,10 @@ const AdminView = () => {
                 totalPosts: res.data.totalPosts,
                 platformStatus: res.data.platformStatus || "Operational"
             });
+            
+            // Fetch Role Requests
+            const roleReqRes = await api.get('/auth/role-requests');
+            setRoleRequests(roleReqRes.data.filter(r => r.status === 'PENDING'));
         } catch (err) {
             toast.error("Command Center Access Denied.");
         } finally {
@@ -71,6 +76,16 @@ const AdminView = () => {
         }
     };
 
+    const handleProcessRoleRequest = async (requestId, status) => {
+        try {
+            await api.put(`/auth/role-requests/${requestId}?status=${status}`);
+            toast.success(`Role request ${status.toLowerCase()}!`);
+            fetchAdminData();
+        } catch (err) {
+            toast.error("Failed to process request.");
+        }
+    };
+
     if (loading) return <div className="h-screen flex items-center justify-center animate-pulse text-slate-400">Loading Command Center...</div>;
 
     return (
@@ -105,6 +120,45 @@ const AdminView = () => {
                     <h3 className="text-4xl font-bold text-emerald-600">{stats.platformStatus}</h3>
                 </div>
             </div>
+
+            {/* Role Requests Management */}
+            {roleRequests.length > 0 && (
+                <div className="bg-card border border-border rounded-[3rem] overflow-hidden shadow-sm mb-8">
+                    <h2 className="px-10 py-6 text-xl font-bold bg-muted/20 border-b border-border text-foreground">Pending Role Change Requests</h2>
+                    <table className="w-full text-left">
+                        <thead className="bg-muted/50 border-b border-border text-xs font-bold uppercase tracking-widest text-muted-foreground/70">
+                            <tr>
+                                <th className="px-10 py-6">User</th>
+                                <th className="px-10 py-6 text-center">Requested Role</th>
+                                <th className="px-10 py-6 text-right pr-12">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/50">
+                            {roleRequests.map(req => (
+                                <tr key={req.requestId} className="hover:bg-muted/30 transition-colors group">
+                                    <td className="px-10 py-6">
+                                        <div className="flex flex-col">
+                                            <span className="font-bold text-foreground text-lg">{req.user.fullName}</span>
+                                            <span className="text-xs text-muted-foreground font-medium tracking-tight uppercase">{req.user.email}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-10 py-6 text-center">
+                                        <span className="px-4 py-1.5 rounded-full text-xs font-bold border bg-blue-500/10 text-blue-500 border-blue-500/20">
+                                            {req.requestedRole}
+                                        </span>
+                                    </td>
+                                    <td className="px-10 py-6 text-right pr-12">
+                                        <div className="flex justify-end gap-3">
+                                            <button onClick={() => handleProcessRoleRequest(req.requestId, 'APPROVED')} className="px-4 py-2 bg-emerald-500/10 text-emerald-600 rounded-xl hover:bg-emerald-500/20 transition-all font-bold text-sm">Approve</button>
+                                            <button onClick={() => handleProcessRoleRequest(req.requestId, 'REJECTED')} className="px-4 py-2 bg-destructive/10 text-destructive rounded-xl hover:bg-destructive/20 transition-all font-bold text-sm">Reject</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             {/* Identity Management Table */}
             <div className="bg-card border border-border rounded-[3rem] overflow-hidden shadow-sm">

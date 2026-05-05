@@ -45,6 +45,13 @@ const Dashboard = () => {
           setRole('READER');
       }
       fetchUserProfile(userId);
+      
+      // Periodically sync profile to catch role changes dynamically
+      const interval = setInterval(() => {
+          fetchUserProfile(userId);
+      }, 60000); // Every minute
+      
+      return () => clearInterval(interval);
     } else {
       localStorage.clear();
       navigate("/login");
@@ -54,7 +61,16 @@ const Dashboard = () => {
   const fetchUserProfile = async (id) => {
     try {
       const response = await api.get(`/auth/profile/${id}`);
-      if (response.data) setUserData(response.data);
+      if (response.data) {
+        setUserData(response.data);
+        
+        // Ensure the role is up-to-date in case it was changed by an admin
+        if (response.data.role) {
+          const fetchedRole = response.data.role.replace('ROLE_', '').toUpperCase();
+          setRole(fetchedRole);
+          localStorage.setItem('role', response.data.role);
+        }
+      }
     } catch (err) { 
       console.error("Dashboard profile fetch failed:", err); 
     } finally {
@@ -69,7 +85,7 @@ const Dashboard = () => {
 
   const renderContent = () => {
     switch(activeTab) {
-      case 'overview': return <ReaderView />;
+      case 'overview': return <ReaderView onWriteClick={() => setActiveTab('content')} />;
       case 'content': return <AuthorView />;
       case 'discussions': return <ModerationQueue />;
       case 'media': return <MediaLibrary isAdminMode={false} />; 
@@ -79,7 +95,7 @@ const Dashboard = () => {
       case 'taxonomy': return <TaxonomyManager />;
       case 'newsletter': return <NewsletterManager />;
       case 'saved': return <SavedPosts />;
-      default: return <ReaderView />;
+      default: return <ReaderView onWriteClick={() => setActiveTab('content')} />;
     }
   };
 

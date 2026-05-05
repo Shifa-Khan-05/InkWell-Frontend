@@ -77,16 +77,14 @@ describe('Login Page', () => {
     it('toggles password visibility', () => {
         render(<MockLogin />);
         const passwordInput = screen.getByPlaceholderText(/Password/i);
-        const toggleBtn = screen.getByRole('button', { name: '' }); // The eye button has no text, so we might need a better query or label
+        const toggleBtn = screen.getByRole('button', { name: /toggle/i });
 
         expect(passwordInput.type).toBe('password');
         
-        // Find by icon/button container - the eye icon is inside a button
-        const eyeButton = screen.getByPlaceholderText(/Password/i).parentElement.querySelector('button');
-        fireEvent.click(eyeButton);
+        fireEvent.click(toggleBtn);
         expect(passwordInput.type).toBe('text');
         
-        fireEvent.click(eyeButton);
+        fireEvent.click(toggleBtn);
         expect(passwordInput.type).toBe('password');
     });
 });

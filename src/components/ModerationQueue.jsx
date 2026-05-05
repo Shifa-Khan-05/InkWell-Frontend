@@ -20,7 +20,7 @@ const ModerationQueue = () => {
     const handleAction = async (id, action) => {
         try {
             await api.put(`/comments/${id}/${action}`);
-            toast.success(`Comment ${action}ed!`);
+            toast.success(`Comment ${action === 'approve' ? 'approved' : 'rejected'}!`);
             setPending(prev => prev.filter(c => c.commentId !== id));
         } catch (err) { toast.error("Moderation failed."); }
     };
@@ -49,8 +49,8 @@ const ModerationQueue = () => {
                         <p className="text-foreground/80 font-serif text-lg italic leading-relaxed">"{comment.content}"</p>
                     </div>
                     <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleAction(comment.commentId, 'approve')} className="p-3 bg-card border border-border text-muted-foreground rounded-xl hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-500/10 transition-all shadow-sm"><Check size={20}/></button>
-                        <button onClick={() => handleAction(comment.commentId, 'reject')} className="p-3 bg-card border border-border text-muted-foreground rounded-xl hover:text-rose-600 hover:border-rose-200 hover:bg-rose-500/10 transition-all shadow-sm"><X size={20}/></button>
+                        <button onClick={() => handleAction(comment.commentId, 'approve')} title="Approve" className="p-3 bg-card border border-border text-muted-foreground rounded-xl hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-500/10 transition-all shadow-sm"><Check size={20}/></button>
+                        <button onClick={() => handleAction(comment.commentId, 'reject')} title="Reject" className="p-3 bg-card border border-border text-muted-foreground rounded-xl hover:text-rose-600 hover:border-rose-200 hover:bg-rose-500/10 transition-all shadow-sm"><X size={20}/></button>
                     </div>
                 </div>
             )) : <div className="py-20 text-center border-2 border-dashed border-border bg-muted/30 rounded-[2.5rem] text-muted-foreground font-medium tracking-wide">No discussions awaiting review.</div>}

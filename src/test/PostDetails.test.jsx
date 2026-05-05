@@ -55,7 +55,7 @@ describe('PostDetails Page', () => {
     it('renders loading state initially', () => {
         webApi.get.mockReturnValue(new Promise(() => {}));
         render(<MockPostDetails />);
-        expect(screen.getByText(/Assembling Narrative.../i)).toBeInTheDocument();
+        expect(screen.getByText(/Assembling Narrative\.\.\./i)).toBeInTheDocument();
     });
 
     it('renders post details and comments correctly', async () => {
@@ -64,12 +64,10 @@ describe('PostDetails Page', () => {
         
         render(<MockPostDetails />);
 
-        await waitFor(() => {
-            expect(screen.getByText('Test Post')).toBeInTheDocument();
-            expect(screen.getByText(/Detailed content/i)).toBeInTheDocument();
-            expect(screen.getByText(/Author Name/i)).toBeInTheDocument();
-            expect(screen.getByText('Nice post!')).toBeInTheDocument();
-        });
+        expect(await screen.findByText('Test Post')).toBeInTheDocument();
+        expect(screen.getByText(/Detailed content/i)).toBeInTheDocument();
+        expect(screen.getByText(/Author Name/i)).toBeInTheDocument();
+        expect(screen.getByText('Nice post!')).toBeInTheDocument();
     });
 
     it('handles liking a post', async () => {
@@ -79,13 +77,12 @@ describe('PostDetails Page', () => {
 
         render(<MockPostDetails />);
 
-        await waitFor(() => screen.getByText('10'));
-        
-        const likeBtn = screen.getByText('10').parentElement;
+        const likesCount = await screen.findByText('10');
+        const likeBtn = likesCount.closest('button') || likesCount.parentElement;
         fireEvent.click(likeBtn);
 
         await waitFor(() => {
-            expect(api.post).toHaveBeenCalledWith('/posts/1/like?userId=123');
+            expect(api.post).toHaveBeenCalledWith('/posts/1/like?userId=123', undefined);
             expect(screen.getByText('11')).toBeInTheDocument();
         });
     });
@@ -96,13 +93,16 @@ describe('PostDetails Page', () => {
         
         render(<MockPostDetails />);
 
-        await waitFor(() => screen.getByText('Test Post'));
+        expect(await screen.findByText('Test Post')).toBeInTheDocument();
         
-        // As a READER (non-pro), saving should show a warning
-        const saveBtn = screen.getByText(/Library/i).parentElement;
+        // Use more specific button query instead of closest()
+        const saveBtn = screen.getByRole('button', { name: /Library/i });
         fireEvent.click(saveBtn);
 
-        expect(toast.warning).toHaveBeenCalledWith(expect.stringContaining("Pro feature"));
+        expect(toast.warning).toHaveBeenCalledWith(
+            expect.stringContaining("Saving Manuscripts is a Pro feature! ✨"),
+            expect.any(Object)
+        );
 
         // Change to ADMIN (pro)
         localStorage.setItem('role', 'ADMIN');
@@ -122,18 +122,30 @@ describe('PostDetails Page', () => {
 
         render(<MockPostDetails />);
 
-        await waitFor(() => screen.getByPlaceholderText(/Share your thoughts.../i));
-        
-        const textarea = screen.getByPlaceholderText(/Share your thoughts.../i);
-
+        const textarea = await screen.findByPlaceholderText(/Share your thoughts\.\.\./i);
         fireEvent.change(textarea, { target: { value: 'New insightful comment' } });
-        fireEvent.click(document.querySelector('button[type="submit"]'));
+        
+        // Use type="submit" or specific button class/label to resolve ambiguity
+        const submitBtn = screen.getByRole('button', { name: /send/i }) || screen.getAllByRole('button').find(b => b.innerHTML.includes('lucide-send'));
+        fireEvent.click(submitBtn);
 
         await waitFor(() => {
             expect(api.post).toHaveBeenCalledWith('/comments/add', expect.objectContaining({
                 content: 'New insightful comment'
             }));
-            expect(toast.info).toHaveBeenCalledWith(expect.stringContaining("moderation"));
+            // Match the exact toast message with emoji
+            expect(toast.info).toHaveBeenCalledWith(
+                expect.stringContaining("Narrative submitted for moderation. 🛡️"),
+                expect.any(Object)
+            );
         });
+    });
+
+    it('handles API failure gracefully', async () => {
+        webApi.get.mockRejectedValueOnce(new Error('Fetch failed'));
+        
+        render(<MockPostDetails />);
+
+        expect(await screen.findByText(/Manuscript not found\./i)).toBeInTheDocument();
     });
 });

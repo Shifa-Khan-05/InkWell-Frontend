@@ -108,21 +108,22 @@ const Profile = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Full Name</label>
-                    <input type="text" value={profile.fullName} className="w-full bg-muted border border-border rounded-2xl p-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm" onChange={(e) => setProfile({...profile, fullName: e.target.value})} required />
+                    <label htmlFor="fullName" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Full Name</label>
+                    <input id="fullName" type="text" value={profile.fullName} className="w-full bg-muted border border-border rounded-2xl p-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm" onChange={(e) => setProfile({...profile, fullName: e.target.value})} required />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Username</label>
-                    <input type="text" value={profile.username} className="w-full bg-muted border border-border rounded-2xl p-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-primary transition-all shadow-sm" onChange={(e) => setProfile({...profile, username: e.target.value})} />
+                    <label htmlFor="username" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Username</label>
+                    <input id="username" type="text" value={profile.username} className="w-full bg-muted border border-border rounded-2xl p-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-primary transition-all shadow-sm" onChange={(e) => setProfile({...profile, username: e.target.value})} />
                 </div>
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Age</label>
-                    <input type="number" value={profile.age} className="w-full bg-muted border border-border rounded-2xl p-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm" onChange={(e) => setProfile({...profile, age: e.target.value})} />
+                    <label htmlFor="age" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Age</label>
+                    <input id="age" type="number" value={profile.age} className="w-full bg-muted border border-border rounded-2xl p-5 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-bold text-foreground transition-all shadow-sm" onChange={(e) => setProfile({...profile, age: e.target.value})} />
                 </div>
                 <div className={`space-y-2 ${profile.authProvider === 'GOOGLE' ? 'opacity-50' : ''}`}>
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Password</label>
+                    <label htmlFor="password" className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Password</label>
                     <div className="relative">
                         <input 
+                            id="password"
                             type={showPassword ? "text" : "password"} 
                             placeholder={profile.authProvider === 'GOOGLE' ? "Managed by Google" : "••••••••"}
                             disabled={profile.authProvider === 'GOOGLE'}
@@ -133,6 +134,7 @@ const Profile = () => {
                             <button 
                                 type="button" 
                                 onClick={() => setShowPassword(!showPassword)}
+                                aria-label="Toggle Password Visibility"
                                 className="absolute right-5 top-[18px] text-muted-foreground hover:text-primary transition-colors z-10"
                             >
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
