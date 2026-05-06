@@ -1,14 +1,1 @@
-/api/*           http://3.108.190.193.nip.io:8081/api/:splat           200
-/auth/*          http://3.108.190.193.nip.io:8081/auth/:splat          200
-/uploads/*       http://3.108.190.193.nip.io:8081/uploads/:splat       200
-/posts/*         http://3.108.190.193.nip.io:8081/posts/:splat         200
-/post_uploads/*  http://3.108.190.193.nip.io:8081/post_uploads/:splat  200
-/comments/*      http://3.108.190.193.nip.io:8081/comments/:splat      200
-/taxonomy/*      http://3.108.190.193.nip.io:8081/taxonomy/:splat      200
-/media/*         http://3.108.190.193.nip.io:8081/media/:splat         200
-/newsletter/*    http://3.108.190.193.nip.io:8081/newsletter/:splat    200
-/payments/*      http://3.108.190.193.nip.io:8081/payments/:splat      200
-/notifications/* http://3.108.190.193.nip.io:8081/notifications/:splat 200
-/oauth2/*        http://3.108.190.193.nip.io:8081/oauth2/:splat        200
-/login/*         http://3.108.190.193.nip.io:8081/login/:splat         200
 /* /index.html 200
