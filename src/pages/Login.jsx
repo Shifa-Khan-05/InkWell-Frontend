@@ -34,7 +34,7 @@ const Login = () => {
     };
 
     const handleGoogleLogin = () => {
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8081";
+        const baseUrl = import.meta.env.VITE_API_BASE_URL !== undefined ? import.meta.env.VITE_API_BASE_URL : "http://localhost:8081";
         window.location.href = `${baseUrl}/oauth2/authorization/google`;
     };
 
