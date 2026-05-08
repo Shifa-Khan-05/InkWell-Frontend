@@ -30,7 +30,7 @@ const AdminView = () => {
             
             // Fetch Role Requests
             const roleReqRes = await api.get('/auth/role-requests');
-            setRoleRequests(roleReqRes.data.filter(r => r.status === 'PENDING'));
+            setRoleRequests(roleReqRes.data.filter(r => r.status?.toUpperCase() === 'PENDING'));
         } catch (err) {
             toast.error("Command Center Access Denied.");
         } finally {
@@ -138,8 +138,8 @@ const AdminView = () => {
                                 <tr key={req.requestId} className="hover:bg-muted/30 transition-colors group">
                                     <td className="px-10 py-6">
                                         <div className="flex flex-col">
-                                            <span className="font-bold text-foreground text-lg">{req.user.fullName}</span>
-                                            <span className="text-xs text-muted-foreground font-medium tracking-tight uppercase">{req.user.email}</span>
+                                            <span className="font-bold text-foreground text-lg">{req.user?.fullName || "Unknown Identity"}</span>
+                                            <span className="text-xs text-muted-foreground font-medium tracking-tight uppercase">{req.user?.email || "No Email"}</span>
                                         </div>
                                     </td>
                                     <td className="px-10 py-6 text-center">
