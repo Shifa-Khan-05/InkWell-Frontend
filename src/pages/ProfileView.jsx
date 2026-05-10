@@ -153,7 +153,7 @@ const ProfileView = () => {
                 <div className="flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="w-48 h-48 rounded-full border border-border p-2 mb-8 shadow-md overflow-hidden bg-muted">
                         <img 
-                            src={previewUrl ? (previewUrl.includes('localhost') ? previewUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/') : previewUrl) : `https://ui-avatars.com/api/?name=${profile.fullName}&background=d97706&color=fff`} 
+                            src={previewUrl ? (previewUrl.includes('localhost') ? (previewUrl.includes(':8084') ? previewUrl.replace(/http:\/\/localhost:8084\//, 'https://3.108.190.193.nip.io/auth/') : (previewUrl.includes(':8082') ? previewUrl.replace(/http:\/\/localhost:8082\//, 'https://3.108.190.193.nip.io/post/') : previewUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/'))) : previewUrl) : `https://ui-avatars.com/api/?name=${profile.fullName}&background=d97706&color=fff`} 
                             className="w-full h-full object-cover rounded-full" 
                             alt="Avatar" 
                         />
@@ -182,7 +182,7 @@ const ProfileView = () => {
                     <div className="flex flex-col items-center gap-4 bg-muted p-6 rounded-[2.5rem] border border-border">
                         <div className="relative group cursor-pointer" onClick={() => fileInputRef.current.click()}>
                             <div className="w-32 h-32 rounded-full border-2 border-background overflow-hidden shadow-md bg-background">
-                                <img src={previewUrl ? (previewUrl.includes('localhost') ? previewUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/') : previewUrl) : `https://ui-avatars.com/api/?name=${profile.fullName}&background=d97706&color=fff`} alt="Preview" className="w-full h-full object-cover" />
+                                <img src={previewUrl ? (previewUrl.includes('localhost') ? (previewUrl.includes(':8084') ? previewUrl.replace(/http:\/\/localhost:8084\//, 'https://3.108.190.193.nip.io/auth/') : (previewUrl.includes(':8082') ? previewUrl.replace(/http:\/\/localhost:8082\//, 'https://3.108.190.193.nip.io/post/') : previewUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/'))) : previewUrl) : `https://ui-avatars.com/api/?name=${profile.fullName}&background=d97706&color=fff`} alt="Preview" className="w-full h-full object-cover" />
                             </div>
                             <div className="absolute inset-0 bg-primary/20 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
                                 <UploadCloud size={24} className="text-primary-foreground" />

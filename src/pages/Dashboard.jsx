@@ -228,7 +228,7 @@ const Dashboard = () => {
               <Link to="/profile" className="flex items-center gap-2 sm:gap-3 bg-muted/50 border border-border py-1 sm:py-1.5 pl-1 sm:pl-1.5 pr-2 sm:pr-4 rounded-full hover:border-primary/30 transition-all shadow-sm">
                 <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full overflow-hidden border border-border ring-2 ring-background">
                   <img 
-                    src={userData.profileImageUrl ? (userData.profileImageUrl.includes('localhost') ? userData.profileImageUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/') : userData.profileImageUrl) : `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
+                    src={userData.profileImageUrl ? (userData.profileImageUrl.includes('localhost') ? (userData.profileImageUrl.includes(':8084') ? userData.profileImageUrl.replace(/http:\/\/localhost:8084\//, 'https://3.108.190.193.nip.io/auth/') : (userData.profileImageUrl.includes(':8082') ? userData.profileImageUrl.replace(/http:\/\/localhost:8082\//, 'https://3.108.190.193.nip.io/post/') : userData.profileImageUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/'))) : userData.profileImageUrl) : `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
                     className="w-full h-full object-cover" 
                     alt="Avatar" 
                   />
