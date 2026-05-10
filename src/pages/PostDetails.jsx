@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import api, { webApi } from '../api/axios'; // ✅ Import webApi
+import api, { webApi } from '../api/axios'; 
 import { Heart, User, ArrowLeft, Clock, Send, MessageSquare, Image as ImageIcon, Bookmark } from 'lucide-react';
 import { toast } from 'react-toastify';
 import usePageTitle from '../hooks/usePageTitle';
@@ -11,13 +11,13 @@ const PostHeader = ({ post }) => (
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1] sm:leading-[1.1] px-2">{post.title}</h1>
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-muted-foreground text-xs sm:text-sm font-bold tracking-wide border-y border-border py-4 sm:py-6">
             <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-primary/10 rounded-lg text-primary"><User size={14} sm:size={18} /></div> 
+                <div className="p-1.5 bg-primary/10 rounded-lg text-primary"><User size={18} /></div> 
                 <Link to={`/profile/${post.authorId}`} className="text-foreground hover:text-primary transition-colors cursor-pointer">
                     {post.fullName || "Author"}
                 </Link>
             </div>
             <div className="flex items-center gap-2">
-                <Clock size={14} sm:size={18} className="text-muted-foreground/60" /> 
+                <Clock size={18} className="text-muted-foreground/60" /> 
                 <span>{post.readTimeMin || 3} min read</span>
             </div>
         </div>
@@ -25,23 +25,33 @@ const PostHeader = ({ post }) => (
 );
 
 // ✅ SUB-COMPONENT: POST VISUAL
-const PostVisual = ({ post }) => (
-    <div className="w-full aspect-video rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden border border-border bg-card mb-10 sm:mb-16 shadow-lg relative group">
-        {post.featuredImageUrl ? (
-            <img 
-                src={post.featuredImageUrl} 
-                alt={post.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                onError={(e) => { e.target.src = 'https://placehold.co/1200x675/f5f5f4/a8a29e/png?text=InkWell+Manuscript'; }}
-            />
-        ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6">
-                <ImageIcon size={48} sm:size={64} strokeWidth={1.5} className="mb-4 opacity-20" />
-                <p className="text-[10px] sm:text-sm font-black uppercase tracking-widest opacity-40 text-center">Visual Manuscript Missing</p>
-            </div>
-        )}
-    </div>
-);
+const PostVisual = ({ post }) => {
+    const normalizeUrl = (url) => {
+        if (!url) return null;
+        if (url.includes('localhost')) {
+            return url.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/');
+        }
+        return url;
+    };
+
+    return (
+        <div className="w-full aspect-video rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden border border-border bg-card mb-10 sm:mb-16 shadow-lg relative group">
+            {post.featuredImageUrl ? (
+                <img 
+                    src={normalizeUrl(post.featuredImageUrl)} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    onError={(e) => { e.target.src = 'https://placehold.co/1200x675/f5f5f4/a8a29e/png?text=InkWell+Manuscript'; }}
+                />
+            ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6">
+                    <ImageIcon size={48} sm:size={64} strokeWidth={1.5} className="mb-4 opacity-20" />
+                    <p className="text-[10px] sm:text-sm font-black uppercase tracking-widest opacity-40 text-center">Visual Manuscript Missing</p>
+                </div>
+            )}
+        </div>
+    );
+};
 
 // ✅ SUB-COMPONENT: DISCUSSION SECTION
 const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit }) => (
@@ -75,7 +85,7 @@ const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit }) =>
                         <div className="flex justify-between items-center mb-4">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                    <User size={14} sm:size={18} />
+                                    <User size={18} />
                                 </div>
                                 <span className="text-foreground font-black text-sm sm:text-base tracking-tight truncate max-w-[150px] sm:max-w-none">
                                     {comment.authorName || 'Anonymous'}
