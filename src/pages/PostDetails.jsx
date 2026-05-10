@@ -252,15 +252,4 @@ const PostDetails = () => {
     );
 };
 
-                <DiscussionSection 
-                    comments={comments} 
-                    newComment={newComment} 
-                    setNewComment={setNewComment} 
-                    onSubmit={handleAddComment} 
-                />
-            </div>
-        </div>
-    );
-};
-
 export default PostDetails;

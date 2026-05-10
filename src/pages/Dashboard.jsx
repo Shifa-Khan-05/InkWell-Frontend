@@ -245,4 +245,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-shboard;
