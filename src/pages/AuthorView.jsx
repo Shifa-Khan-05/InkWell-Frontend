@@ -44,7 +44,7 @@ const AuthorView = () => {
     const fetchAssets = async () => {
         setAssetsLoading(true);
         try {
-            const response = await api.get(`/author/assets/${loggedInUserId}`);
+            const response = await api.get(`/api/author/assets/${loggedInUserId}`);
             setAssets(response.data);
         } catch (err) {
             console.error("Failed to fetch assets");

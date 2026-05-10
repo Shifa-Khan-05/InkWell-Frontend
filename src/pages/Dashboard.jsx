@@ -149,6 +149,14 @@ const Dashboard = () => {
           <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto custom-scrollbar">
             <NavItem icon={LayoutDashboard} label="Overview" tab="overview" />
             
+            <button 
+              onClick={() => { navigate('/browse'); setSidebarOpen(false); }} 
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm text-muted-foreground hover:text-foreground hover:bg-muted"
+            >
+              <Globe size={20} /> 
+              <span className="flex-1 text-left">Browse Library</span>
+            </button>
+            
             {(role === 'ADMIN' || role === 'PREMIUM') && (
               <NavItem icon={Bookmark} label="Saved Library" tab="saved" pro={true} />
             )}
@@ -220,7 +228,7 @@ const Dashboard = () => {
               <Link to="/profile" className="flex items-center gap-2 sm:gap-3 bg-muted/50 border border-border py-1 sm:py-1.5 pl-1 sm:pl-1.5 pr-2 sm:pr-4 rounded-full hover:border-primary/30 transition-all shadow-sm">
                 <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full overflow-hidden border border-border ring-2 ring-background">
                   <img 
-                    src={userData.profileImageUrl || `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
+                    src={userData.profileImageUrl ? (userData.profileImageUrl.includes('localhost') ? userData.profileImageUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/') : userData.profileImageUrl) : `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
                     className="w-full h-full object-cover" 
                     alt="Avatar" 
                   />
