@@ -19,58 +19,64 @@ const Footer = () => {
 };
   return (
     <footer className="bg-card border-t border-border mt-20 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-12 text-muted-foreground">
+      <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-muted-foreground">
         
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-foreground rounded-xl flex items-center justify-center">
-              <span className="text-background font-bold text-xl font-serif">iw</span>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+              <span className="text-primary-foreground font-black text-xl font-serif italic">iw</span>
             </div>
-            <h2 className="text-2xl font-bold text-foreground tracking-tight">InkWell</h2>
+            <h2 className="text-2xl font-black text-foreground tracking-tighter">InkWell</h2>
           </div>
-          <p className="text-sm leading-relaxed">A sanctuary for digital manuscripts. Write, publish, and grow your audience in a world of curated stories.</p>
+          <p className="text-sm leading-relaxed font-medium opacity-80 max-w-xs">A sanctuary for digital manuscripts. Write, publish, and grow your audience in a world of curated stories.</p>
         </div>
 
         <div>
-          <h3 className="text-foreground font-bold uppercase tracking-widest text-xs mb-6">Explore</h3>
-          <ul className="space-y-3 text-sm font-medium">
-            <li className="hover:text-primary cursor-pointer transition-colors">Published Works</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Taxonomy</li>
-            <li className="hover:text-primary cursor-pointer transition-colors">Trending Narratives</li>
+          <h3 className="text-foreground font-black uppercase tracking-[0.2em] text-[10px] mb-8">Explore</h3>
+          <ul className="space-y-4 text-sm font-bold">
+            <li className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
+                <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
+                Published Works
+            </li>
+            <li className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
+                <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
+                Taxonomy
+            </li>
+            <li className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
+                <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
+                Trending Narratives
+            </li>
           </ul>
         </div>
 
-        <div>
-          <h3 className="text-foreground font-bold uppercase tracking-widest text-xs mb-6">Correspondence</h3>
-          <p className="text-sm mb-4">support@inkwell.com</p>
+        <div className="space-y-6">
+          <h3 className="text-foreground font-black uppercase tracking-[0.2em] text-[10px] mb-2">Correspondence</h3>
+          <p className="text-sm font-bold text-foreground/70">connect@inkwell.com</p>
           
-          <form onSubmit={handleSubscribe} className="space-y-2">
+          <form onSubmit={handleSubscribe} className="relative group">
             <input 
               type="email" 
-              placeholder="Newsletter signup" 
-              className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+              placeholder="Your email address" 
+              className="w-full bg-muted/50 border border-border rounded-xl px-4 py-3 text-sm font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/30"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <button type="submit" className="w-full bg-foreground text-background text-[10px] font-bold uppercase py-2 rounded-lg hover:bg-foreground/90 transition-all">
+            <button type="submit" className="absolute right-1.5 top-1.5 bottom-1.5 bg-primary text-primary-foreground text-[10px] font-black uppercase px-4 rounded-lg hover:bg-primary/90 transition-all shadow-sm">
               Join
             </button>
           </form>
-
-          <div className="mt-6 flex gap-4">
-            {/* Social icons could go here */}
-          </div>
         </div>
       </div>
 
-      <div className="border-t border-border/50 max-w-6xl mx-auto py-8 px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-xs font-medium text-muted-foreground/60">
-          © {new Date().getFullYear()} InkWell Platform. All rights reserved.
+      <div className="border-t border-border/50 max-w-7xl mx-auto py-10 px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 text-center md:text-left">
+          © {new Date().getFullYear()} InkWell Publishing Systems. All rights reserved.
         </p>
-        <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
-          <span className="hover:text-foreground cursor-pointer transition-colors">Privacy Policy</span>
-          <span className="hover:text-foreground cursor-pointer transition-colors">Terms of Service</span>
+        <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
+          <span className="hover:text-primary cursor-pointer transition-colors">Privacy</span>
+          <span className="hover:text-primary cursor-pointer transition-colors">Terms</span>
+          <span className="hover:text-primary cursor-pointer transition-colors">Sitemap</span>
         </div>
       </div>
     </footer>

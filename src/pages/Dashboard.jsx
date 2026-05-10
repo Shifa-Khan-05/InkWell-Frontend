@@ -4,7 +4,7 @@ import api from '../api/axios';
 import {
   LayoutDashboard, FileText, LogOut, Menu, X, 
   Settings, MessageSquare, ShieldAlert, Globe, 
-  Layers, Mail, Image as ImageIcon, Home, Sun, Moon, Bookmark
+  Layers, Mail, Image as ImageIcon, Home, Sun, Moon, Bookmark, ChevronRight
 } from 'lucide-react';
 import NotificationBell from '../components/NotificationBell';
 import { useTheme } from '../hooks/ThemeContext';
@@ -37,7 +37,6 @@ const Dashboard = () => {
     let savedRole = localStorage.getItem("role"); 
     
     if (token && userId && userId !== "null" && userId !== "undefined") {
-      // ✅ Normalized role check to handle both "ADMIN" and "ROLE_ADMIN"
       if (savedRole) {
           savedRole = savedRole.replace('ROLE_', '').toUpperCase();
           setRole(savedRole);
@@ -46,10 +45,9 @@ const Dashboard = () => {
       }
       fetchUserProfile(userId);
       
-      // Periodically sync profile to catch role changes dynamically
       const interval = setInterval(() => {
           fetchUserProfile(userId);
-      }, 60000); // Every minute
+      }, 60000);
       
       return () => clearInterval(interval);
     } else {
@@ -63,8 +61,6 @@ const Dashboard = () => {
       const response = await api.get(`/auth/profile/${id}`);
       if (response.data) {
         setUserData(response.data);
-        
-        // Ensure the role is up-to-date in case it was changed by an admin
         if (response.data.role) {
           const fetchedRole = response.data.role.replace('ROLE_', '').toUpperCase();
           setRole(fetchedRole);
@@ -99,149 +95,149 @@ const Dashboard = () => {
     }
   };
 
+  const NavItem = ({ icon: Icon, label, tab, pro }) => (
+    <button 
+      onClick={() => {
+        setActiveTab(tab);
+        setSidebarOpen(false);
+      }} 
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm ${activeTab === tab ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}
+    >
+      <Icon size={20} /> 
+      <span className="flex-1 text-left">{label}</span>
+      {pro && <span className="text-[10px] font-black bg-primary/20 text-primary px-1.5 py-0.5 rounded-md">PRO</span>}
+      {activeTab === tab && <ChevronRight size={14} className="opacity-50" />}
+    </button>
+  );
+
   if (loading) return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-4 transition-colors duration-300">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-4">
         <div className="w-12 h-12 border-4 border-muted border-t-primary rounded-full animate-spin"></div>
-        <div className="text-muted-foreground font-medium text-sm tracking-wide">Loading workspace...</div>
+        <div className="text-muted-foreground font-black text-xs uppercase tracking-widest">InkWell Core Syncing...</div>
     </div>
   );
 
   return (
-    <div className="bg-background text-foreground min-h-screen flex flex-col font-sans selection:bg-primary/20 selection:text-primary transition-colors duration-300">
-      <div className="flex flex-1 relative">
-        {sidebarOpen && <div className="fixed inset-0 bg-background/40 backdrop-blur-sm z-40 md:hidden" onClick={() => setSidebarOpen(false)}></div>}
-
-        <aside className={`fixed md:static z-50 top-0 left-0 h-full w-64 bg-card border-r border-border transform transition-transform duration-300 flex flex-col ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 shadow-xl md:shadow-none`}>
+    <div className="bg-background text-foreground h-screen flex flex-col overflow-hidden transition-colors duration-300">
+      <div className="flex flex-1 relative overflow-hidden">
+        
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
           <div 
-            onClick={() => navigate('/browse')} 
-            className="p-6 h-[73px] border-b border-border flex justify-between items-center cursor-pointer hover:bg-muted/50 transition-colors"
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-lg font-serif">iw</span>
+            className="fixed inset-0 bg-background/60 backdrop-blur-md z-[60] md:hidden transition-opacity" 
+            onClick={() => setSidebarOpen(false)}
+          ></div>
+        )}
+
+        {/* Sidebar */}
+        <aside className={`fixed md:static z-[70] top-0 left-0 h-full w-[280px] sm:w-72 bg-card border-r border-border transform transition-transform duration-500 ease-in-out flex flex-col ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 shadow-2xl md:shadow-none`}>
+          <div className="p-6 flex justify-between items-center border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
+            <Link to="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <span className="text-primary-foreground font-black text-xl font-serif italic">iw</span>
               </div>
-              <span className="text-xl font-bold text-foreground tracking-tight">InkWell</span>
-            </div>
-            <button onClick={() => setSidebarOpen(false)} className="md:hidden text-muted-foreground hover:text-foreground"><X size={24} /></button>
+              <span className="text-xl font-black text-foreground tracking-tighter">InkWell</span>
+            </Link>
+            <button 
+              onClick={() => setSidebarOpen(false)} 
+              className="md:hidden p-2 rounded-lg bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X size={20} />
+            </button>
           </div>
 
           <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto custom-scrollbar">
-            <button onClick={() => navigate('/browse')} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground font-medium hover:text-foreground hover:bg-muted transition-all">
-              <Home size={20} /> Back to Library
-            </button>
-
-            <button onClick={() => setActiveTab('overview')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'overview' ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-              <LayoutDashboard size={20} /> Dashboard Home
-            </button>
-
-            {/* Saved Library - PRO FEATURE */}
+            <NavItem icon={LayoutDashboard} label="Overview" tab="overview" />
+            
             {(role === 'ADMIN' || role === 'PREMIUM') && (
-                <button onClick={() => setActiveTab('saved')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'saved' ? 'bg-secondary/10 text-secondary shadow-sm border border-secondary/20' : 'text-muted-foreground hover:text-secondary hover:bg-secondary/5'}`}>
-                    <Bookmark size={20} /> Saved Library
-                    <span className="ml-auto text-[10px] font-bold bg-secondary/20 text-secondary px-1.5 py-0.5 rounded-md">PRO</span>
-                </button>
+              <NavItem icon={Bookmark} label="Saved Library" tab="saved" pro={true} />
             )}
 
-            {/* Standard User Actions */}
             {(role === 'AUTHOR' || role === 'ADMIN' || role === 'PREMIUM') && (
               <>
-                <button onClick={() => setActiveTab('content')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'content' ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <FileText size={20} /> My Content
-                </button>
-                <button onClick={() => setActiveTab('media')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'media' ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <ImageIcon size={20} /> Media Vault
-                </button>
+                <NavItem icon={FileText} label="My Content" tab="content" />
+                <NavItem icon={ImageIcon} label="Media Vault" tab="media" />
               </>
             )}
 
-            {/* ✅ SYSTEM ADMIN SECTION */}
             {role === 'ADMIN' && (
-              <div className="pt-4 mt-4 border-t border-border space-y-1.5">
-                <p className="px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground/60 mb-3">System Admin</p>
-                
-                <button onClick={() => setActiveTab('admin')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'admin' ? 'bg-destructive/10 text-destructive shadow-sm border border-destructive/20' : 'text-muted-foreground hover:text-destructive hover:bg-destructive/5'}`}>
-                  <ShieldAlert size={20} /> Identity Control
-                </button>
-
-                <button onClick={() => setActiveTab('discussions')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'discussions' ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <MessageSquare size={20} /> Discussions
-                </button>
-
-                <button onClick={() => setActiveTab('global-content')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'global-content' ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <Globe size={20} /> Global Library
-                </button>
-
-                <button onClick={() => setActiveTab('global-media')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'global-media' ? 'bg-secondary/20 text-secondary-foreground shadow-sm border border-secondary/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <ImageIcon size={20} /> Global Assets
-                </button>
-
-                <button onClick={() => setActiveTab('taxonomy')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'taxonomy' ? 'bg-secondary/20 text-secondary-foreground shadow-sm border border-secondary/30' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <Layers size={20} /> Taxonomy Center
-                </button>
-
-                <button onClick={() => setActiveTab('newsletter')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${activeTab === 'newsletter' ? 'bg-primary/10 text-primary shadow-sm border border-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}`}>
-                  <Mail size={20} /> Newsletter
-                </button>
+              <div className="pt-6 mt-6 border-t border-border space-y-1.5">
+                <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-4">Management Control</p>
+                <NavItem icon={ShieldAlert} label="Identity" tab="admin" />
+                <NavItem icon={MessageSquare} label="Discussions" tab="discussions" />
+                <NavItem icon={Globe} label="Global Library" tab="global-content" />
+                <NavItem icon={ImageIcon} label="Global Assets" tab="global-media" />
+                <NavItem icon={Layers} label="Taxonomy" tab="taxonomy" />
+                <NavItem icon={Mail} label="Newsletter" tab="newsletter" />
               </div>
             )}
           </nav>
 
-          <div className="p-4 border-t border-border mt-auto bg-muted/30">
-             <Link to="/profile" className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground font-medium hover:text-foreground hover:bg-card hover:shadow-sm mb-2 transition-all">
+          <div className="p-4 border-t border-border mt-auto bg-muted/20 backdrop-blur-sm">
+             <button 
+              onClick={() => { navigate('/profile'); setSidebarOpen(false); }}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground font-bold text-sm hover:text-foreground hover:bg-card hover:shadow-sm mb-2 transition-all"
+             >
                 <Settings size={20} /> Profile Settings
-             </Link>
-            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl hover:bg-destructive/10 transition-all text-muted-foreground hover:text-destructive font-medium">
-              <LogOut size={20} /> Logout
+             </button>
+            <button 
+              onClick={handleLogout} 
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 font-bold text-sm transition-all"
+            >
+              <LogOut size={20} /> Sign Out
             </button>
           </div>
         </aside>
 
-        <div className="flex-1 flex flex-col h-screen overflow-hidden">
-          {/* ✅ UPDATED HEADER IN Dashboard.jsx */}
-          <header className="flex justify-between items-center px-8 py-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40 shadow-sm transition-colors duration-300">
-            <div className="flex items-center gap-4">
-              <button className="md:hidden p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors" onClick={() => setSidebarOpen(true)}>
-                <Menu />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+          
+          {/* Header */}
+          <header className="flex justify-between items-center h-16 sm:h-20 px-4 sm:px-8 border-b border-border bg-background/80 backdrop-blur-xl sticky top-0 z-40 shadow-sm transition-all">
+            <div className="flex items-center gap-3">
+              <button 
+                className="md:hidden p-2.5 text-primary bg-primary/10 rounded-xl hover:bg-primary/20 transition-colors" 
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu size={20} />
               </button>
-              <h1 className="text-2xl font-bold tracking-tight capitalize text-foreground">
+              <h1 className="text-lg sm:text-xl font-black tracking-tighter capitalize text-foreground truncate max-w-[150px] sm:max-w-none">
                 {activeTab.replace('-', ' ')}
               </h1>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <button
                 onClick={toggleTheme}
-                className="p-2.5 rounded-full bg-accent hover:bg-accent/80 transition-all active:scale-90"
-                aria-label="Toggle Theme"
+                className="hidden sm:flex p-2.5 rounded-xl bg-muted hover:bg-muted/80 transition-all border border-border"
               >
-                {theme === 'light' ? (
-                  <Moon size={18} className="text-slate-700" />
-                ) : (
-                  <Sun size={18} className="text-amber-400" />
-                )}
+                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
               </button>
 
-              {/* ✨ NEW: Notification Bell Component */}
-              <div className="transition-colors">
-                <NotificationBell />
-              </div>
+              <NotificationBell />
 
-              {/* Existing User Profile Badge */}
-              <div className="flex items-center gap-3 bg-muted border border-border py-1.5 pl-1.5 pr-4 rounded-full shadow-sm hover:shadow-md hover:border-primary/30 transition-all cursor-pointer">
-                <div className="h-8 w-8 rounded-full overflow-hidden border border-border">
+              {/* User Identity Chip */}
+              <Link to="/profile" className="flex items-center gap-2 sm:gap-3 bg-muted/50 border border-border py-1 sm:py-1.5 pl-1 sm:pl-1.5 pr-2 sm:pr-4 rounded-full hover:border-primary/30 transition-all shadow-sm">
+                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full overflow-hidden border border-border ring-2 ring-background">
                   <img 
                     src={userData.profileImageUrl || `https://ui-avatars.com/api/?name=${userData.fullName || 'User'}&background=d97706&color=fff`} 
                     className="w-full h-full object-cover" 
                     alt="Avatar" 
                   />
                 </div>
-                <span className="text-foreground text-sm font-semibold truncate max-w-[120px]">
-                  {userData.fullName || 'User Identity'}
+                <span className="hidden xs:block text-foreground text-xs sm:text-sm font-bold truncate max-w-[80px] sm:max-w-[120px]">
+                  {userData.fullName?.split(' ')[0] || 'User'}
                 </span>
-              </div>
+              </Link>
             </div>
           </header>
-          <main className="p-8 overflow-y-auto flex-1 bg-muted/20">{renderContent()}</main>
+
+          {/* Viewport */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-8 bg-muted/10 custom-scrollbar">
+            <div className="max-w-7xl mx-auto h-full">
+              {renderContent()}
+            </div>
+          </main>
         </div>
       </div>
     </div>
@@ -249,3 +245,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+shboard;

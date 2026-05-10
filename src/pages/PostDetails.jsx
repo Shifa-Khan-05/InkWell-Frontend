@@ -7,17 +7,17 @@ import usePageTitle from '../hooks/usePageTitle';
 
 // ✅ SUB-COMPONENT: POST HEADER
 const PostHeader = ({ post }) => (
-    <header className="space-y-8 mb-14 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.1]">{post.title}</h1>
-        <div className="flex flex-wrap items-center justify-center gap-8 text-muted-foreground text-sm font-semibold tracking-wide border-y border-border py-6">
+    <header className="space-y-6 sm:space-y-8 mb-10 sm:mb-14 text-center">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1] sm:leading-[1.1] px-2">{post.title}</h1>
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-muted-foreground text-xs sm:text-sm font-bold tracking-wide border-y border-border py-4 sm:py-6">
             <div className="flex items-center gap-2">
-                <User size={18} className="text-primary" /> 
+                <div className="p-1.5 bg-primary/10 rounded-lg text-primary"><User size={14} sm:size={18} /></div> 
                 <Link to={`/profile/${post.authorId}`} className="text-foreground hover:text-primary transition-colors cursor-pointer">
                     {post.fullName || "Author"}
                 </Link>
             </div>
             <div className="flex items-center gap-2">
-                <Clock size={18} className="text-muted-foreground/60" /> 
+                <Clock size={14} sm:size={18} className="text-muted-foreground/60" /> 
                 <span>{post.readTimeMin || 3} min read</span>
             </div>
         </div>
@@ -26,7 +26,7 @@ const PostHeader = ({ post }) => (
 
 // ✅ SUB-COMPONENT: POST VISUAL
 const PostVisual = ({ post }) => (
-    <div className="w-full aspect-video rounded-[2.5rem] overflow-hidden border border-border bg-card mb-16 shadow-lg relative group">
+    <div className="w-full aspect-video rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden border border-border bg-card mb-10 sm:mb-16 shadow-lg relative group">
         {post.featuredImageUrl ? (
             <img 
                 src={post.featuredImageUrl} 
@@ -35,9 +35,9 @@ const PostVisual = ({ post }) => (
                 onError={(e) => { e.target.src = 'https://placehold.co/1200x675/f5f5f4/a8a29e/png?text=InkWell+Manuscript'; }}
             />
         ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground">
-                <ImageIcon size={64} strokeWidth={1.5} className="mb-4 opacity-20" />
-                <p className="text-sm font-semibold uppercase tracking-widest opacity-40">Visual Manuscript Missing</p>
+            <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-6">
+                <ImageIcon size={48} sm:size={64} strokeWidth={1.5} className="mb-4 opacity-20" />
+                <p className="text-[10px] sm:text-sm font-black uppercase tracking-widest opacity-40 text-center">Visual Manuscript Missing</p>
             </div>
         )}
     </div>
@@ -45,9 +45,9 @@ const PostVisual = ({ post }) => (
 
 // ✅ SUB-COMPONENT: DISCUSSION SECTION
 const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit }) => (
-    <section className="mt-16 space-y-10 max-w-2xl mx-auto">
+    <section className="mt-12 sm:mt-16 space-y-8 sm:space-y-10 max-w-2xl mx-auto">
         <div className="flex items-center justify-between border-b border-border pb-4">
-            <h3 className="text-2xl font-bold tracking-tight flex items-center gap-3 text-foreground">
+            <h3 className="text-xl sm:text-2xl font-black tracking-tighter flex items-center gap-3 text-foreground">
                 <MessageSquare className="text-primary" /> Discussions
             </h3>
         </div>
@@ -57,40 +57,40 @@ const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit }) =>
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Share your thoughts..."
-                className="w-full bg-card border border-border rounded-[2rem] p-6 pr-20 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all min-h-[140px] resize-none text-foreground font-medium text-base shadow-sm placeholder:text-muted-foreground/40"
+                className="w-full bg-card border border-border rounded-[1.5rem] sm:rounded-[2rem] p-5 sm:p-6 pr-16 sm:pr-20 outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all min-h-[120px] sm:min-h-[140px] resize-none text-foreground font-bold text-sm sm:text-base shadow-sm placeholder:text-muted-foreground/30"
             />
             <button 
                 type="submit" 
                 disabled={!newComment.trim()}
-                className="absolute bottom-6 right-6 bg-primary p-4 rounded-full text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all shadow-md active:scale-95"
+                className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 bg-primary p-3 sm:p-4 rounded-full text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-all shadow-md active:scale-95"
             >
-                <Send size={20} />
+                <Send size={18} sm:size={20} />
             </button>
         </form>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             {comments && comments.length > 0 ? (
                 comments.map(comment => (
-                    <div key={comment.commentId} className="bg-card p-8 rounded-3xl border border-border shadow-sm group hover:border-primary/20 transition-colors">
+                    <div key={comment.commentId} className="bg-card p-6 sm:p-8 rounded-[1.5rem] sm:rounded-3xl border border-border shadow-sm group hover:border-primary/20 transition-colors">
                         <div className="flex justify-between items-center mb-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                    <User size={18} />
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                    <User size={14} sm:size={18} />
                                 </div>
-                                <span className="text-foreground font-bold tracking-tight">
+                                <span className="text-foreground font-black text-sm sm:text-base tracking-tight truncate max-w-[150px] sm:max-w-none">
                                     {comment.authorName || 'Anonymous'}
                                 </span>
                             </div>
-                            <span className="text-muted-foreground/60 text-xs font-semibold tracking-wide">
+                            <span className="text-muted-foreground/50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
                                 {new Date(comment.createdAt).toLocaleDateString()}
                             </span>
                         </div>
-                        <p className="text-muted-foreground leading-relaxed">{comment.content}</p>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-medium">{comment.content}</p>
                     </div>
                 ))
             ) : (
-                <div className="py-16 text-center border-2 border-dashed border-border rounded-3xl">
-                    <p className="font-semibold tracking-wide text-muted-foreground">No active discussions yet.</p>
+                <div className="py-12 sm:py-16 text-center border-2 border-dashed border-border rounded-[1.5rem] sm:rounded-3xl">
+                    <p className="font-bold tracking-tight text-muted-foreground text-sm">No active discussions yet.</p>
                 </div>
             )}
         </div>
@@ -201,7 +201,7 @@ const PostDetails = () => {
         <div className="min-h-screen flex items-center justify-center bg-stone-50">
             <div className="flex flex-col items-center space-y-4 transition-all">
                 <div className="w-12 h-12 border-4 border-stone-200 border-t-amber-600 rounded-full animate-spin"></div>
-                <div className="text-slate-500 font-medium tracking-wide">Assembling Narrative...</div>
+                <div className="text-slate-500 font-bold uppercase tracking-widest text-xs">Assembling Narrative...</div>
             </div>
         </div>
     );
@@ -210,36 +210,47 @@ const PostDetails = () => {
 
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-            <div className="max-w-4xl mx-auto px-6 py-16">
-                <button onClick={() => navigate('/browse')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-12 transition-all group font-bold tracking-tight bg-card px-5 py-2.5 rounded-full shadow-sm border border-border hover:shadow-md hover:-translate-y-0.5">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-16">
+                <button onClick={() => navigate('/browse')} className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 sm:mb-12 transition-all group font-bold tracking-tight bg-card px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-sm border border-border hover:shadow-md hover:-translate-y-0.5 text-sm sm:text-base">
                     <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" /> Back to feed
                 </button>
 
                 <PostHeader post={post} />
                 <PostVisual post={post} />
 
-                <article className="prose prose-lg md:prose-xl max-w-none text-foreground/80 dark:text-foreground/90 leading-relaxed font-serif mb-24 px-4 md:px-8">
+                <article className="prose prose-base sm:prose-lg md:prose-xl max-w-none text-foreground/80 dark:text-foreground/90 leading-[1.8] font-serif mb-16 sm:mb-24 px-2 sm:px-8">
                     {post.content}
                 </article>
 
-                <div className="flex flex-col items-center justify-center py-16 border-t border-border space-y-8">
-                    <div className="flex items-center gap-6">
+                <div className="flex flex-col items-center justify-center py-12 sm:py-16 border-t border-border space-y-8">
+                    <div className="flex items-center gap-4 sm:gap-8">
                         <div className="flex flex-col items-center gap-2">
-                            <button onClick={handleLike} className={`group flex justify-center items-center gap-4 px-10 py-5 rounded-full border-2 transition-all duration-300 ${liked ? 'bg-primary/10 border-primary/20 text-primary shadow-inner' : 'bg-card border-border text-muted-foreground hover:border-primary/20 hover:text-primary hover:shadow-md hover:-translate-y-1'}`}>
-                                <Heart fill={liked ? "currentColor" : "none"} size={28} className={`transition-transform duration-300 ${liked ? 'scale-110' : 'group-hover:scale-110'}`} />
-                                <span className="text-2xl font-bold tracking-tight">{post.likesCount || 0}</span>
+                            <button onClick={handleLike} className={`group flex justify-center items-center gap-3 sm:gap-4 px-8 sm:px-10 py-4 sm:py-5 rounded-full border-2 transition-all duration-300 ${liked ? 'bg-primary/10 border-primary/20 text-primary shadow-inner' : 'bg-card border-border text-muted-foreground hover:border-primary/20 hover:text-primary hover:shadow-md hover:-translate-y-1'}`}>
+                                <Heart fill={liked ? "currentColor" : "none"} size={24} sm:size={28} className={`transition-transform duration-300 ${liked ? 'scale-110' : 'group-hover:scale-110'}`} />
+                                <span className="text-xl sm:text-2xl font-black tracking-tighter">{post.likesCount || 0}</span>
                             </button>
-                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Appreciate</p>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Appreciate</p>
                         </div>
                         <div className="flex flex-col items-center gap-2">
-                            <button onClick={handleSavePost} className={`group flex justify-center items-center gap-4 px-10 py-5 rounded-full border-2 transition-all duration-300 ${saved ? 'bg-secondary/10 border-secondary/20 text-secondary shadow-inner' : 'bg-card border-border text-muted-foreground hover:border-secondary/20 hover:text-secondary hover:shadow-md hover:-translate-y-1'}`}>
-                                <Bookmark fill={saved ? "currentColor" : "none"} size={28} className={`transition-transform duration-300 ${saved ? 'scale-110' : 'group-hover:scale-110'}`} />
-                                {isPro && <span className="text-xs font-bold bg-secondary/20 text-secondary px-2 py-0.5 rounded-md">PRO</span>}
+                            <button onClick={handleSavePost} className={`group flex justify-center items-center gap-3 sm:gap-4 px-8 sm:px-10 py-4 sm:py-5 rounded-full border-2 transition-all duration-300 ${saved ? 'bg-secondary/10 border-secondary/20 text-secondary shadow-inner' : 'bg-card border-border text-muted-foreground hover:border-secondary/20 hover:text-secondary hover:shadow-md hover:-translate-y-1'}`}>
+                                <Bookmark fill={saved ? "currentColor" : "none"} size={24} sm:size={28} className={`transition-transform duration-300 ${saved ? 'scale-110' : 'group-hover:scale-110'}`} />
+                                {isPro && <span className="text-[10px] font-black bg-secondary/20 text-secondary px-2 py-0.5 rounded-md">PRO</span>}
                             </button>
-                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Library</p>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Library</p>
                         </div>
                     </div>
                 </div>
+
+                <DiscussionSection 
+                    comments={comments} 
+                    newComment={newComment} 
+                    setNewComment={setNewComment} 
+                    onSubmit={handleAddComment} 
+                />
+            </div>
+        </div>
+    );
+};
 
                 <DiscussionSection 
                     comments={comments} 

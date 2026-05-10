@@ -76,10 +76,10 @@ const Browse = () => {
                 {/* Header & Search Section */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-12">
                     <div className="space-y-4">
-                        <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-foreground leading-none">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight text-foreground leading-none">
                             Explore <span className="text-primary italic font-serif">Inspiration</span>
                         </h1>
-                        <p className="text-muted-foreground max-w-md text-lg font-light leading-relaxed">
+                        <p className="text-muted-foreground max-w-md text-base sm:text-lg font-medium leading-relaxed opacity-80">
                             Discover perspectives from our global community of thinkers and creators.
                         </p>
                     </div>
@@ -89,7 +89,7 @@ const Browse = () => {
                         <input 
                             type="text"
                             placeholder="Search by title or author..."
-                            className="w-full bg-card border border-border shadow-sm rounded-2xl py-4 pl-14 pr-4 text-foreground font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/40"
+                            className="w-full bg-card border border-border shadow-sm rounded-2xl py-4 pl-14 pr-4 text-foreground font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all placeholder:text-muted-foreground/30"
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>

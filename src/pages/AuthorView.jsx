@@ -179,45 +179,70 @@ const handleSubmit = async (e, status) => {
             </div>
 
             <div className="bg-card rounded-3xl border border-border overflow-hidden shadow-sm">
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-muted/50 border-b border-border text-muted-foreground text-xs font-semibold uppercase tracking-wider">
-                        <tr>
-                            <th className="px-6 py-5">Manuscript</th>
-                            <th className="px-6 py-5 text-center">Status</th>
-                            <th className="px-6 py-5 text-right pr-8">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                        {posts.map((post) => (
-                            <tr key={post.postId} className="hover:bg-muted/30 transition-colors group">
-                                <td className="px-6 py-4 flex items-center gap-4">
-                                    <div className="h-14 w-20 rounded-xl bg-muted overflow-hidden border border-border flex-shrink-0 flex items-center justify-center">
-                                        {post.featuredImageUrl ? <img src={post.featuredImageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt=""/> : <ImageIcon size={20} className="text-muted-foreground/30"/>}
-                                    </div>
-                                    <span className="font-bold text-foreground text-base tracking-tight truncate max-w-[200px] md:max-w-xs">{post.title}</span>
-                                </td>
-                                <td className="px-6 py-4 text-center">
-                                    <span className={`text-xs px-3 py-1.5 rounded-full font-bold tracking-wide border ${post.status === 'PUBLISHED' ? 'text-green-600 border-green-500/20 bg-green-500/10' : 'text-primary border-primary/20 bg-primary/10'}`}>
+                {/* Desktop Table View */}
+                <div className="hidden sm:block overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                        <thead className="bg-muted/50 border-b border-border text-muted-foreground text-xs font-semibold uppercase tracking-wider">
+                            <tr>
+                                <th className="px-6 py-5">Manuscript</th>
+                                <th className="px-6 py-5 text-center">Status</th>
+                                <th className="px-6 py-5 text-right pr-8">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border">
+                            {posts.map((post) => (
+                                <tr key={post.postId} className="hover:bg-muted/30 transition-colors group">
+                                    <td className="px-6 py-4 flex items-center gap-4">
+                                        <div className="h-14 w-20 rounded-xl bg-muted overflow-hidden border border-border flex-shrink-0 flex items-center justify-center">
+                                            {post.featuredImageUrl ? <img src={post.featuredImageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt=""/> : <ImageIcon size={20} className="text-muted-foreground/30"/>}
+                                        </div>
+                                        <span className="font-bold text-foreground text-base tracking-tight truncate max-w-[200px] md:max-w-xs">{post.title}</span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        <span className={`text-xs px-3 py-1.5 rounded-full font-bold tracking-wide border ${post.status === 'PUBLISHED' ? 'text-green-600 border-green-500/20 bg-green-500/10' : 'text-primary border-primary/20 bg-primary/10'}`}>
+                                            {post.status}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 text-right pr-8">
+                                        <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button onClick={() => handleOpenModal(post)} className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"><FileEdit size={18} /></button>
+                                            <button onClick={() => handleDelete(post.postId)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"><Trash2 size={18} /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="block sm:hidden divide-y divide-border">
+                    {posts.map((post) => (
+                        <div key={post.postId} className="p-4 flex flex-col gap-4">
+                            <div className="flex gap-4">
+                                <div className="h-20 w-24 rounded-xl bg-muted overflow-hidden border border-border flex-shrink-0 flex items-center justify-center">
+                                    {post.featuredImageUrl ? <img src={post.featuredImageUrl} className="w-full h-full object-cover" alt=""/> : <ImageIcon size={24} className="text-muted-foreground/30"/>}
+                                </div>
+                                <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                    <h4 className="font-bold text-foreground text-lg leading-tight truncate mb-2">{post.title}</h4>
+                                    <span className={`inline-block text-[10px] w-fit px-2 py-1 rounded-full font-black tracking-widest border ${post.status === 'PUBLISHED' ? 'text-green-600 border-green-500/20 bg-green-500/10' : 'text-primary border-primary/20 bg-primary/10'}`}>
                                         {post.status}
                                     </span>
-                                </td>
-                                <td className="px-6 py-4 text-right pr-8">
-                                    <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <button onClick={() => handleOpenModal(post)} className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-colors"><FileEdit size={18} /></button>
-                                        <button onClick={() => handleDelete(post.postId)} className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"><Trash2 size={18} /></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                        {posts.length === 0 && (
-                            <tr>
-                                <td colSpan="3" className="px-6 py-12 text-center text-muted-foreground font-medium">
-                                    No manuscripts found. Click "New Narrative" to get started.
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                            <div className="flex gap-2 pt-2 border-t border-border/50">
+                                <button onClick={() => handleOpenModal(post)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-muted text-muted-foreground font-bold text-sm"><FileEdit size={16}/> Edit</button>
+                                <button onClick={() => handleDelete(post.postId)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl bg-destructive/10 text-destructive font-bold text-sm"><Trash2 size={16}/> Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {posts.length === 0 && (
+                    <div className="px-6 py-12 text-center text-muted-foreground font-medium">
+                        No manuscripts found. Click "New Narrative" to get started.
+                    </div>
+                )}
             </div>
 
             {showModal && (
