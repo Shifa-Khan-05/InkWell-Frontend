@@ -9,7 +9,6 @@ const api = axios.create({
     withCredentials: true,
     timeout: 15000, // 15 seconds timeout
     headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
 });
@@ -20,7 +19,6 @@ export const webApi = axios.create({
     withCredentials: true,
     timeout: 15000,
     headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
 });
