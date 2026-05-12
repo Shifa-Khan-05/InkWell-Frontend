@@ -217,7 +217,7 @@ const Dashboard = () => {
             <div className="flex items-center gap-2 sm:gap-4">
               <button
                 onClick={toggleTheme}
-                className="hidden sm:flex p-2.5 rounded-xl bg-muted hover:bg-muted/80 transition-all border border-border"
+                className="flex p-2.5 rounded-xl bg-muted hover:bg-muted/80 transition-all border border-border"
               >
                 {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
               </button>

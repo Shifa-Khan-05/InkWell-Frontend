@@ -8,7 +8,7 @@ import usePageTitle from '../hooks/usePageTitle';
 // ✅ SUB-COMPONENT: POST HEADER
 const PostHeader = ({ post }) => (
     <header className="space-y-6 sm:space-y-8 mb-10 sm:mb-14 text-center">
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1] sm:leading-[1.1] px-2">{post.title}</h1>
+        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-foreground leading-[1.1] sm:leading-[1.1] px-2 break-words">{post.title}</h1>
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-muted-foreground text-xs sm:text-sm font-bold tracking-wide border-y border-border py-4 sm:py-6">
             <div className="flex items-center gap-2">
                 <div className="p-1.5 bg-primary/10 rounded-lg text-primary"><User size={18} /></div> 
@@ -228,7 +228,7 @@ const PostDetails = () => {
                 <PostHeader post={post} />
                 <PostVisual post={post} />
 
-                <article className="prose prose-base sm:prose-lg md:prose-xl max-w-none text-foreground/80 dark:text-foreground/90 leading-[1.8] font-serif mb-16 sm:mb-24 px-2 sm:px-8">
+                <article className="prose prose-base sm:prose-lg md:prose-xl max-w-none text-foreground/80 dark:text-foreground/90 leading-[1.8] font-serif mb-16 sm:mb-24 px-2 sm:px-8 break-words overflow-x-hidden">
                     {post.content}
                 </article>
 

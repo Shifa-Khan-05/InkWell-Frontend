@@ -81,7 +81,7 @@ const NotificationBell = () => {
                     {/* Backdrop to close */}
                     <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
                     
-                    <div className="absolute right-0 mt-4 w-96 bg-card border border-border rounded-[2rem] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
+                    <div className="absolute right-[-40px] sm:right-0 mt-4 w-[calc(100vw-2rem)] xs:w-80 sm:w-96 bg-card border border-border rounded-[2rem] shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in duration-200">
                         {/* Header */}
                         <div className="p-5 border-b border-border flex justify-between items-center bg-muted/30">
                             <div>
