@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FileEdit, Trash2, X, Send, Save, LayoutDashboard, Image as ImageIcon, UploadCloud, Layers, Tag as TagIcon } from 'lucide-react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import { toast } from 'react-toastify';
 import api from '../api/axios';
 import usePageTitle from '../hooks/usePageTitle';
