@@ -129,7 +129,7 @@ const Browse = () => {
                                     </Link>
                                     
                                     <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
-                                        {post.excerpt || "A deep dive into narrative exploration within the InkWell framework..."}
+                                        {post.excerpt || (post.content ? post.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : "No description available.")}
                                     </p>
                                 </div>
 

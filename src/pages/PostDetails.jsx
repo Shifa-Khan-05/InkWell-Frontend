@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api, { webApi } from '../api/axios'; 
-import { Heart, User, ArrowLeft, Clock, Send, MessageSquare, Image as ImageIcon, Bookmark } from 'lucide-react';
+import { Heart, User, ArrowLeft, Clock, Send, MessageSquare, Image as ImageIcon, Bookmark, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 import usePageTitle from '../hooks/usePageTitle';
 
@@ -54,7 +54,7 @@ const PostVisual = ({ post }) => {
 };
 
 // ✅ SUB-COMPONENT: DISCUSSION SECTION
-const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit }) => (
+const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit, currentUserId, postAuthorId, onDeleteComment }) => (
     <section className="mt-12 sm:mt-16 space-y-8 sm:space-y-10 max-w-2xl mx-auto">
         <div className="flex items-center justify-between border-b border-border pb-4">
             <h3 className="text-xl sm:text-2xl font-black tracking-tighter flex items-center gap-3 text-foreground">
@@ -91,9 +91,16 @@ const DiscussionSection = ({ comments, newComment, setNewComment, onSubmit }) =>
                                     {comment.authorName || 'Anonymous'}
                                 </span>
                             </div>
-                            <span className="text-muted-foreground/50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
-                                {new Date(comment.createdAt).toLocaleDateString()}
-                            </span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-muted-foreground/50 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
+                                    {new Date(comment.createdAt).toLocaleDateString()}
+                                </span>
+                                {(currentUserId == postAuthorId || localStorage.getItem('role') === 'ROLE_ADMIN') && (
+                                    <button onClick={() => onDeleteComment(comment.commentId)} className="text-muted-foreground hover:text-destructive transition-colors" title="Delete Comment">
+                                        <Trash2 size={16} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-medium">{comment.content}</p>
                     </div>
@@ -164,7 +171,7 @@ const PostDetails = () => {
             setSaved(!saved);
             toast.success(saved ? "Removed from Library" : "Saved to Library 🔖");
         } catch (err) {
-            toast.error("Action failed.");
+            toast.error("Oops! We couldn't save this manuscript right now. Please try again.");
         }
     };
 
@@ -185,7 +192,17 @@ const PostDetails = () => {
             toast.info("Narrative submitted for moderation. 🛡️", { position: "bottom-center", autoClose: 5000 });
             setNewComment("");
         } catch (err) {
-            toast.error("Failed to post comment.");
+            toast.error("Oops! We couldn't post your comment right now. Please try again.");
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await api.delete(`/comments/${commentId}?userId=${currentUserId}`);
+            setComments(comments.filter(c => c.commentId !== commentId));
+            toast.success("Comment gracefully removed from your manuscript.");
+        } catch (err) {
+            toast.error("Oops! We couldn't delete this comment right now. Please try again.");
         }
     };
 
@@ -203,7 +220,7 @@ const PostDetails = () => {
             }));
             setLiked(newLikedStatus);
         } catch (err) {
-            toast.error("Action failed.");
+            toast.error("Oops! We couldn't register your appreciation right now. Please try again.");
         }
     };
 
@@ -255,7 +272,10 @@ const PostDetails = () => {
                     comments={comments} 
                     newComment={newComment} 
                     setNewComment={setNewComment} 
-                    onSubmit={handleAddComment} 
+                    onSubmit={handleAddComment}
+                    currentUserId={currentUserId}
+                    postAuthorId={post.authorId}
+                    onDeleteComment={handleDeleteComment}
                 />
             </div>
         </div>

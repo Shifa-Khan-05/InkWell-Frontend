@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import api from '../api/axios';
 import { toast } from 'react-toastify';
 import { Save, ArrowLeft, Edit3, UploadCloud, X, Lock, Eye, EyeOff } from 'lucide-react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import usePageTitle from '../hooks/usePageTitle';
 
 const ProfileView = () => {
@@ -62,7 +62,7 @@ const ProfileView = () => {
                 if (err.response?.status === 404) {
                     setNotFound(true);
                 } else {
-                    toast.error("Identity Sync Failed.");
+                    toast.error("Oops! We couldn't sync your identity right now. Please try again later.");
                 }
             } finally {
                 setLoading(false);
@@ -88,7 +88,7 @@ const ProfileView = () => {
             setIsEditMode(false);
             toast.success("Profile Protocol Updated! ✨");
         } catch (err) {
-            toast.error("Update failed: Service Unreachable.");
+            toast.error("Oops! We couldn't update your profile right now. Please try again.");
         }
     };
 
@@ -249,24 +249,29 @@ const ProfileView = () => {
 
                     {/* ✅ PASSWORD FIELD: Hidden if Google User with Eye Toggle */}
                     {!isGoogleUser && (
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Update Password</label>
-                            <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
-                                <input 
-                                    type={showPassword ? "text" : "password"} 
-                                    value={profile.password} 
-                                    placeholder="Enter new password" 
-                                    className="w-full bg-card border border-border rounded-2xl p-4 pl-12 pr-12 text-foreground outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm" 
-                                    onChange={(e) => setProfile({...profile, password: e.target.value})} 
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Update Password</label>
+                                <div className="relative group">
+                                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" size={18} />
+                                    <input 
+                                        type={showPassword ? "text" : "password"} 
+                                        value={profile.password} 
+                                        placeholder="Enter new password" 
+                                        className="w-full bg-card border border-border rounded-2xl p-4 pl-12 pr-12 text-foreground outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all shadow-sm" 
+                                        onChange={(e) => setProfile({...profile, password: e.target.value})} 
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex justify-end mt-2">
+                                <Link to="/reset-password" className="text-xs font-bold text-primary hover:underline hover:text-primary/80 transition-colors">Forgot password? Reset it here</Link>
                             </div>
                         </div>
                     )}

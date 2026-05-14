@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FileEdit, Trash2, X, Send, Save, LayoutDashboard, Image as ImageIcon, UploadCloud, Layers, Tag as TagIcon } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { toast } from 'react-toastify';
 import api from '../api/axios';
 import usePageTitle from '../hooks/usePageTitle';
@@ -327,7 +329,9 @@ const AuthorView = () => {
                                 </div>
                             </div>
 
-                            <textarea value={postData.content} placeholder="Begin your journey..." rows="8" className="w-full bg-card border border-border rounded-2xl p-5 sm:p-6 text-foreground outline-none focus:ring-4 focus:ring-primary/10 focus:border-primary font-serif text-base sm:text-lg leading-relaxed transition-all placeholder:text-muted-foreground/30" onChange={(e) => setPostData({...postData, content: e.target.value})} />
+                            <div className="border border-border rounded-2xl overflow-hidden focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary transition-all bg-card [&_.ql-toolbar]:bg-muted [&_.ql-toolbar]:border-b-border [&_.ql-container]:border-none [&_.ql-editor]:min-h-[16rem] [&_.ql-editor]:text-base sm:[&_.ql-editor]:text-lg [&_.ql-editor]:font-serif text-foreground">
+                                <ReactQuill theme="snow" value={postData.content} onChange={(value) => setPostData({...postData, content: value})} placeholder="Begin your journey..." />
+                            </div>
 
                             <div className="flex flex-col sm:flex-row gap-4 pt-4 sticky bottom-0 bg-card py-4 border-t border-border mt-auto">
                                 <button type="button" onClick={(e) => handleSubmit(e, "DRAFT")} className="flex-1 bg-muted py-4 rounded-xl font-bold text-muted-foreground hover:text-foreground transition flex justify-center items-center gap-2 border border-border hover:bg-muted/80"><Save size={18}/> Save Draft</button>

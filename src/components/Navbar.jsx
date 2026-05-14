@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Sun, Moon, Menu, X, ChevronRight, LogOut, LayoutDashboard, Compass, User } from "lucide-react";
+import { Sun, Moon, Menu, X, ChevronRight, LogOut, LayoutDashboard, Compass, User, Send } from "lucide-react";
+import { toast } from 'react-toastify';
 import { useTheme } from "../hooks/ThemeContext";
 import api from '../api/axios';
+import NotificationBell from './NotificationBell';
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
@@ -12,6 +14,19 @@ const Navbar = () => {
   const location = useLocation();
   const userId = localStorage.getItem('userId');
   const { theme, toggleTheme } = useTheme();
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    try {
+        await api.post('/newsletter/subscribe', { email });
+        toast.success("Welcome to the inner circle! Check your inbox. 📧");
+        setEmail("");
+    } catch (err) {
+        toast.error("Oops! Could not subscribe. Please check your email and try again.");
+    }
+  };
 
   // Close menu on route change
   useEffect(() => {
@@ -41,6 +56,7 @@ const Navbar = () => {
   };
 
   return (
+    <>
     <nav className="sticky top-0 z-[100] w-full bg-background/80 backdrop-blur-xl border-b border-border transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
@@ -95,7 +111,11 @@ const Navbar = () => {
               </>
             ) : (
               <div className="flex items-center gap-3 pl-4">
-                <Link className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors" to="/login">
+                <form onSubmit={handleSubscribe} className="hidden lg:flex items-center relative">
+                    <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Subscribe to newsletter..." className="bg-muted border border-border px-4 py-2 rounded-full text-sm font-medium w-48 focus:w-64 outline-none transition-all focus:ring-2 focus:ring-primary/20" required />
+                    <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:text-primary/80 transition-colors"><Send size={16}/></button>
+                </form>
+                <Link className="text-sm font-bold text-muted-foreground hover:text-foreground transition-colors ml-2" to="/login">
                   Log in
                 </Link>
                 <Link
@@ -106,6 +126,10 @@ const Navbar = () => {
                 </Link>
               </div>
             )}
+
+            <div className="flex items-center ml-2">
+              <NotificationBell />
+            </div>
 
             <button
               onClick={toggleTheme}
@@ -137,9 +161,10 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+    </nav>
 
       {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 top-[64px] z-[99] bg-background border-t border-border md:hidden transition-all duration-300 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+      <div className={`fixed inset-0 top-[64px] sm:top-[80px] z-[99] bg-background border-t border-border md:hidden transition-all duration-300 ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
         <div className="p-6 flex flex-col gap-4">
           
           <Link 
@@ -210,7 +235,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 

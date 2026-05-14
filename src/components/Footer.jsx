@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { toast } from "react-toastify";
 
@@ -34,17 +35,23 @@ const Footer = () => {
         <div>
           <h3 className="text-foreground font-black uppercase tracking-[0.2em] text-[10px] mb-8">Explore</h3>
           <ul className="space-y-4 text-sm font-bold">
-            <li className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
-                <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
-                Published Works
+            <li>
+              <Link to="/browse" className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
+                  Published Works
+              </Link>
             </li>
-            <li className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
-                <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
-                Taxonomy
+            <li>
+              <Link to="/browse" className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
+                  Taxonomy
+              </Link>
             </li>
-            <li className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
-                <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
-                Trending Narratives
+            <li>
+              <Link to="/browse" className="hover:text-primary cursor-pointer transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 bg-primary/20 rounded-full group-hover:bg-primary transition-colors"></span>
+                  Trending Narratives
+              </Link>
             </li>
           </ul>
         </div>
@@ -74,9 +81,9 @@ const Footer = () => {
           © {new Date().getFullYear()} InkWell Publishing Systems. All rights reserved.
         </p>
         <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">
-          <span className="hover:text-primary cursor-pointer transition-colors">Privacy</span>
-          <span className="hover:text-primary cursor-pointer transition-colors">Terms</span>
-          <span className="hover:text-primary cursor-pointer transition-colors">Sitemap</span>
+          <Link to="/" className="hover:text-primary cursor-pointer transition-colors">Privacy</Link>
+          <Link to="/" className="hover:text-primary cursor-pointer transition-colors">Terms</Link>
+          <Link to="/" className="hover:text-primary cursor-pointer transition-colors">Sitemap</Link>
         </div>
       </div>
     </footer>

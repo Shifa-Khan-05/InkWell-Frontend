@@ -68,7 +68,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
         <Route path="/taxonomy-manager" element={
-          <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+          <ProtectedRoute allowedRoles={['ROLE_ADMIN', 'ROLE_AUTHOR', 'ROLE_PREMIUM']}>
             <TaxonomyManager />
           </ProtectedRoute>
         } />

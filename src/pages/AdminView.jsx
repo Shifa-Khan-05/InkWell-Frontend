@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trash2, UserCheck, Activity, Globe, PlusCircle, ShieldCheck, Mail, TrendingUp, Users, MoreHorizontal } from 'lucide-react';
 import api, { webApi } from '../api/axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import usePageTitle from '../hooks/usePageTitle';
 
 const AdminView = () => {
@@ -191,7 +191,9 @@ const AdminView = () => {
                                     <img src={user.profileImageUrl || `https://ui-avatars.com/api/?name=${user.fullName}&background=f8fafc&color=64748b`} className="w-full h-full object-cover" alt=""/>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h4 className="font-bold text-foreground text-lg truncate">{user.fullName}</h4>
+                                    <Link to={`/profile/${user.userId || user.id}`}>
+                                        <h4 className="font-bold text-foreground text-lg truncate hover:text-primary transition-colors">{user.fullName}</h4>
+                                    </Link>
                                     <p className="text-xs text-muted-foreground truncate font-medium">{user.email}</p>
                                     <span className={`inline-block mt-2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter border ${user.role === 'ROLE_ADMIN' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-muted text-muted-foreground border-border'}`}>
                                         {user.role?.replace('ROLE_', '')}
@@ -226,7 +228,9 @@ const AdminView = () => {
                                                 <img src={user.profileImageUrl || `https://ui-avatars.com/api/?name=${user.fullName}&background=f8fafc&color=64748b`} className="w-full h-full object-cover" alt=""/>
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="font-bold text-foreground text-lg tracking-tight">{user.fullName}</span>
+                                                <Link to={`/profile/${user.userId || user.id}`}>
+                                                    <span className="font-bold text-foreground text-lg tracking-tight hover:text-primary transition-colors">{user.fullName}</span>
+                                                </Link>
                                                 <span className="text-xs text-muted-foreground font-medium tracking-tight uppercase">{user.email}</span>
                                             </div>
                                         </div>
