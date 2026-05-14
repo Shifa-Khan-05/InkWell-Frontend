@@ -165,6 +165,7 @@ const Dashboard = () => {
               <>
                 <NavItem icon={FileText} label="My Content" tab="content" />
                 <NavItem icon={ImageIcon} label="Media Vault" tab="media" />
+                <NavItem icon={Layers} label="Taxonomy" tab="taxonomy" />
               </>
             )}
 
@@ -175,7 +176,6 @@ const Dashboard = () => {
                 <NavItem icon={MessageSquare} label="Discussions" tab="discussions" />
                 <NavItem icon={Globe} label="Global Library" tab="global-content" />
                 <NavItem icon={ImageIcon} label="Global Assets" tab="global-media" />
-                <NavItem icon={Layers} label="Taxonomy" tab="taxonomy" />
                 <NavItem icon={Mail} label="Newsletter" tab="newsletter" />
               </div>
             )}

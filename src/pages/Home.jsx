@@ -263,7 +263,7 @@ const Home = () => {
 
           <div className="grid lg:grid-cols-2 gap-12 items-center bg-card border border-border rounded-[3rem] overflow-hidden shadow-sm">
             <div className="h-full min-h-[400px] relative">
-              <img src="https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=1000&auto=format&fit=crop" alt="Premium Writer Setup" className="absolute inset-0 w-full h-full object-cover" />
+              <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=800&auto=format&fit=crop" alt="Premium Writer Setup" className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card hidden lg:block"></div>
               <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent lg:hidden block"></div>
             </div>
@@ -368,4 +368,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home;

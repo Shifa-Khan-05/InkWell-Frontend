@@ -141,7 +141,11 @@ const Browse = () => {
                                     >
                                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden shadow-sm ring-2 ring-transparent group-hover/author:ring-primary/20 transition-all">
                                             {post.authorImageUrl ? (
-                                                <img src={post.authorImageUrl} alt="Author" className="w-full h-full object-cover" />
+                                                <img 
+                                                    src={post.authorImageUrl.includes('localhost') ? (post.authorImageUrl.includes(':8084') ? post.authorImageUrl.replace(/http:\/\/localhost:8084\//, 'https://3.108.190.193.nip.io/auth/') : post.authorImageUrl.replace(/http:\/\/localhost:[0-9]+\//, 'https://3.108.190.193.nip.io/')) : post.authorImageUrl} 
+                                                    alt="Author" 
+                                                    className="w-full h-full object-cover" 
+                                                />
                                             ) : (
                                                 <User size={18} />
                                             )}

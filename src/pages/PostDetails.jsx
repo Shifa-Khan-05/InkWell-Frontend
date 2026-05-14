@@ -245,9 +245,10 @@ const PostDetails = () => {
                 <PostHeader post={post} />
                 <PostVisual post={post} />
 
-                <article className="prose prose-base sm:prose-lg md:prose-xl max-w-none text-foreground/80 dark:text-foreground/90 leading-[1.8] font-serif mb-16 sm:mb-24 px-2 sm:px-8 break-words overflow-x-hidden">
-                    {post.content}
-                </article>
+                <article 
+                    className="prose prose-base sm:prose-lg md:prose-xl max-w-none text-foreground/80 dark:text-foreground/90 leading-[1.8] font-serif mb-16 sm:mb-24 px-2 sm:px-8 break-words overflow-x-hidden"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                />
 
                 <div className="flex flex-col items-center justify-center py-12 sm:py-16 border-t border-border space-y-8">
                     <div className="flex items-center gap-4 sm:gap-8">
