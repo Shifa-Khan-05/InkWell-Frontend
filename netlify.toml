@@ -1,0 +1,3 @@
+[build]
+  command = "npm install @rolldown/binding-linux-x64-gnu --no-save && npm run build"
+  publish = "dist"
